@@ -10,6 +10,24 @@ app.use(express.logger());
 // var cache = new node_cache();
 
 
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'koink',
+});
+
+connection.connect();
+
+connection.query('SELECT 1 + 1 AS solution', function(err, rows, fields) {
+  if (err) throw err;
+
+  console.log('The solution is: ', rows[0].solution);
+});
+
+connection.end();
+
+
 app.get('/bistro/add/:a/:b', function(request, response) {
 	if (isNaN(request.params.a) || isNaN(request.params.b))
 	{
