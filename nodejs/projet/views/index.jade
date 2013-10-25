@@ -1,0 +1,10 @@
+h3(class="muted") Gomoku Epitech
+hr
+div(class="jumbotron")
+  h1 Gomoku
+  p(class="lead") Le meilleur Gomoku en ligne basé sur nodeJS !
+  a(class="btn btn-success", id="btn") Jouer ! 
+    :coffeescript
+       $('.lead').hide();
+       $('#btn').click -> 
+         $('.lead').toggle()
