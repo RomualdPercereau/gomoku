@@ -12,7 +12,7 @@ exports.about = function(req, res){
 };
 
 exports.contact = function(req, res){
-  res.render('contact', { title: 'Express' })
+  res.render('contact', { title: 'Express', supervar:"caca" })
 };
 
 exports.postcontact = function(req, res){

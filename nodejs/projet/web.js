@@ -38,9 +38,7 @@ app.get('/', function(request, response) {
 	
 	response.status = 200;
 	var user = { name: 'John' }
-  	response.render('index.jade', {
-      globals: { user: "user", currentUser: "req.currentUser" }
-    });
+  	response.render('index.jade',  {user: "Super papa", });
     console.log("Pfou")
 });
 
