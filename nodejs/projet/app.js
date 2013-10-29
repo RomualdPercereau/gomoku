@@ -35,6 +35,9 @@ app.get('/', function(req, res){
 
 app.get('/about', routes.about);
 
+app.get('/game', routes.game);
+
+
 app.get('/contact', routes.contact);
 
 app.post('/postcontact', routes.postcontact);

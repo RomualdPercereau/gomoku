@@ -20,3 +20,8 @@ exports.postcontact = function(req, res){
   //Gestion du message
   //...
 };
+
+
+exports.game = function(req, res){
+  res.render('game', { title: 'game', supervar:"caca" })
+};
