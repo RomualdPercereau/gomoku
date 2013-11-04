@@ -54,6 +54,8 @@ exports.simple_test = function(req) {
 		req.session.map = map;
 		req.session.score_p1 = 0;
 		req.session.score_p2 = 0;
+		req.session.prev_player = -1;
+		req.session.tmp_player = req.params.id_player;
 	}
 
 	// position autorisée
@@ -61,7 +63,8 @@ exports.simple_test = function(req) {
 		move_ok = false;
 	else {
 		move_ok = true;
-		req.session.map[req.params.case_id] = req.params.id_player;
+		req.session.prev_player = req.session.tmp_player;
+		req.session.tmp_player = req.session.map[req.params.case_id] = req.params.id_player;
 	}
 
 	// check victoire/défaite
@@ -72,10 +75,13 @@ exports.simple_test = function(req) {
 	else
 		win = check_5(req.session.map);
 
+	req.session.prev_player = req.params.id_player;
+
 	// return
 	var json = {'id' : req.params.case_id,
 				'move_ok' : move_ok,
-				'id_player' : req.params.id_player,
+				//'id_player' : req.params.id_player,
+				'id_prev_player' : req.session.prev_player,
 				'map' : req.session.map,
 				'score_p1' : req.session.score_p1,
 				'score_p2' : req.session.score_p2,
