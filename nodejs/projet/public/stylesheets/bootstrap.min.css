@@ -15,7 +15,7 @@
       /* Custom container */
       .container-narrow {
         margin: 0 auto;
-        max-width: 1300px;
+        max-width: 1190px;
       }
       .container-narrow > hr {
         margin: 30px 0;
@@ -63,8 +63,8 @@
       {
       	display: block;
       	float: left;
-      	width: 75px;
-      	height: 75px;
+      	width: 63px;
+      	height: 65px;
       	background-image: url("/Croix.png");
       }
        .tabl   li:first-child ul li
@@ -121,4 +121,30 @@
 
 
 
+	#scores
+	{
+
+		text-align: left;
+		margin-top: -40px;
+		padding-left: 120px;
+		height: 60px;
+		font-size: 30px;
+
+	}
+	#score1
+	{
+		color: forestgreen;
+		display: block;
+		width: 200px;
+		float: left;
+	}
+
+	#score2
+	{
+		color: maroon;
+		float: right;
+		text-align: right;
+		padding-right: 120px;
+
+	}
 

@@ -4,12 +4,16 @@ div(class="jumbotron")
   h1 Gomoku
   p(class="lead") Le jeu
   h3(id="current_player") -- 
+  a(href="1" id="restart") Relancer le jeu
+  div(id="scores")
+    p(id="score1") -- 
+    p(id="score2") -- 
   ul(class="tabl")
     counter = 0
-    -   for (var i = 0; i < 16; i++){
+    -   for (var i = 0; i < 19; i++){
             li
                   ul(class="line")
-                    -   for (var k = 0; k < 16; k++){
+                    -   for (var k = 0; k < 19; k++){
                         li(id="id-" + counter++)
                     -      }
     -      }
