@@ -3,33 +3,41 @@ $(function() {
 
 if (location.pathname == "/game")
 {
+
+	$.getJSON("arbitre/-1/-1", function(data)
+	{
+		refreshMap(data['map']);
+		if ($(".circle").length == 0)
+		{
+		    $( "#dialog-confirm" ).dialog({
+		    	title: "Vous jouez ? ",
+		      resizable: false,
+		      height:140,
+		      modal: true,
+		      buttons: {
+		        "1 vs 1": function() {
+		          $( this ).dialog( "close" );
+		          document.cookie = "connect.sid=" +escape(-1);
+		          mode = "PVP";
+		        },
+		        "Joueur contre IA": function() {
+		          $( this ).dialog( "close" );
+		          	document.cookie = "connect.sid=" +escape(-1);
+		  			mode = "PVI";
+
+		        }
+		      }
+		    });
+		}
+	});
+
 	mode = ""
 	id_player = 0;
 
-  $(function() {
-    $( "#dialog-confirm" ).dialog({
-    	title: "Vous jouez ? ",
-      resizable: false,
-      height:140,
-      modal: true,
-      buttons: {
-        "1 vs 1": function() {
-          $( this ).dialog( "close" );
-          mode = "PVP";
-        },
-        "Joueur contre IA": function() {
-          $( this ).dialog( "close" );
-          mode = "PVI";
-
-        }
-      }
-    });
-  });
 
 
 	$(".line li").click(function()
 	{
-		console.log("go" + mode);
 		id = this.id.split("-")[1];
 		$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + id, function(data)
 		{
