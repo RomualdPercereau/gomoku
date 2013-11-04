@@ -29,7 +29,7 @@ exports.simple_test = function(req) {
 
 	var json = {'id' : test,
 				'color' : '#FF00FF',
-				'map' : map
+				'map' : req.session.map
 				};
 				return (json);
 }
