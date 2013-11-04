@@ -82,7 +82,16 @@ if (location.pathname == "/game")
 		if ($("#circle-" + id).html() === undefined)
 		{
 			$("#id-" + id).append("<div id='circle-tmp' class='circle'></div>");
-			$("#circle-tmp").css("background", "forestgreen");
+			id_player++;
+			if (id_player == 1)
+				$("#circle-tmp").css("background", "forestgreen");
+			else if (id_player == 2)
+				$("#circle-tmp").css("background", "maroon");
+			else if (id_player == 3)
+				$("#circle-tmp").css("background", "red");
+			else
+				console.log(id_player);
+			id_player--;
 		}
 
 	})
