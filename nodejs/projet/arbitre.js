@@ -25,9 +25,26 @@ check_5 = function(map) {
 	// check vertical
 	i = 0;
 	cpt = 0;
-
-
-
+/*
+	while (i < 361)
+	{
+		if (map[i] == 0 || (5 - cpt) > (19 - i / 19))
+		{
+			cpt = 0;
+			curr_p = 0;
+		}
+		else if (map[i] == curr_p)
+			cpt++;
+		else
+		{
+			curr_p = map[i];
+			cpt = 1;
+		}
+		i++;
+		if (cpt == 5)
+			return curr_p;
+	}
+*/
 	return 0;
 }
 
@@ -55,7 +72,7 @@ exports.simple_test = function(req) {
 		req.session.score_p1 = 0;
 		req.session.score_p2 = 0;
 		req.session.prev_player = -1;
-		req.session.tmp_player = req.params.id_player;
+		req.session.tmp_player = -1;
 	}
 
 	// position autorisée
@@ -75,12 +92,12 @@ exports.simple_test = function(req) {
 	else
 		win = check_5(req.session.map);
 
-	req.session.prev_player = req.params.id_player;
+	//req.session.prev_player = req.params.id_player;
 
 	// return
 	var json = {'id' : req.params.case_id,
 				'move_ok' : move_ok,
-				//'id_player' : req.params.id_player,
+				'id_player' : req.params.id_player,
 				'id_prev_player' : req.session.prev_player,
 				'map' : req.session.map,
 				'score_p1' : req.session.score_p1,
