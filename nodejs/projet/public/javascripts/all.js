@@ -48,6 +48,20 @@ if (location.pathname == "/game")
 			//alert("Un Find");
 		$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + id, function(data)
 		{
+			if (data['win'])
+			{
+				$.get("/rmsession")
+				$( "#dialog-confirm" ).html("Le joueur " + data['win'] + " a gagné !")
+				$( "#dialog-confirm" ).dialog({
+					title: "Jeu terminé !  ",
+			      modal: true,
+			      buttons: {
+			        Ok: function() {
+			        	window.location.href = window.location.href
+			        }
+			      }
+			    });
+			}
 			if (data['move_ok'])
 			{
 				id_player = (id_player + 1) %2
