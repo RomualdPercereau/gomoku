@@ -9,8 +9,11 @@ if (location.pathname == "/game")
 		console.log(this.id);
 
 
+		console.log("ok");
 
-		$.getJSON( "ajax/test.json", function( data ) {
+		$.getJSON( "arbitre/" + this.id, function( data )
+		{
+			console.log(data)
 		});
 
 
