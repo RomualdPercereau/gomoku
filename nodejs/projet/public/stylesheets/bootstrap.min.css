@@ -15,7 +15,7 @@
       /* Custom container */
       .container-narrow {
         margin: 0 auto;
-        max-width: 700px;
+        max-width: 1300px;
       }
       .container-narrow > hr {
         margin: 30px 0;
@@ -42,3 +42,75 @@
       .marketing p + h4 {
         margin-top: 28px;
       }
+
+ 	.tabl
+ 	{
+ 		width: 1200px;
+ 		margin-left: auto;
+ 		margin-right: auto;
+ 	}
+      .tabl, .line
+      {
+      	list-style-type: none;
+      	float: left;
+      	margin:0;
+      	padding: 0;
+      }
+
+
+
+       .tabl  .line li
+      {
+      	display: block;
+      	float: left;
+      	width: 75px;
+      	height: 75px;
+      	background-image: url("/Croix.png");
+      }
+       .tabl   li:first-child ul li
+      {
+      	background-image: url("/Croix2.png");
+      }
+
+       .tabl   li:last-child ul li
+      {
+      	background-image: url("/Croixbottom.png");
+      }
+
+       .tabl   li:first-child 
+      {
+      	background-image: url("/Croixleft.png");
+      }
+
+      .tabl   li:last-child 
+      {
+      	background-image: url("/Croixright.png");
+      }
+
+       .tabl   li:first-child ul li:first-child
+      {
+      	background-image: url("/Croix2topleft.png");
+      }
+
+       .tabl   li:first-child ul li:last-child
+      {
+      	background-image: url("/Croix2topright.png");
+      }
+
+       .tabl   li:last-child ul li:last-child
+      {
+      	background-image: url("/Croixbottomright.png");
+      }
+
+		.tabl   li:last-child ul li:first-child
+      {
+      	background-image: url("/Croixbottomleft.png");
+      }
+
+
+
+
+
+
+
+
