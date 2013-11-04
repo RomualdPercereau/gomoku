@@ -3,12 +3,14 @@ hr
 div(class="jumbotron")
   h1 Gomoku
   p(class="lead") Le jeu
+  h3(id="current_player") -- 
   ul(class="tabl")
     counter = 0
     -   for (var i = 0; i < 16; i++){
             li
                   ul(class="line")
                     -   for (var k = 0; k < 16; k++){
-                        li(id=counter++)
+                        li(id="id-" + counter++)
                     -      }
     -      }
+div(id="dialog-confirm")
