@@ -21,18 +21,11 @@ exports.postcontact = function(req, res){
   //...
 };
 
-
 exports.arbitre = function(req, res){
 	var arb = require('../arbitre.js');
-
-	res.status(200);
-
-	//GLOBAL.map += 1;
-
 	var ret = arb.simple_test(req);
-
-	console.log(global.map);
-
+		
+	res.status(200);
 	res.send(ret);
 };
 

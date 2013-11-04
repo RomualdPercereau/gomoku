@@ -8,6 +8,11 @@
 
  var app = module.exports = express.createServer();
 
+// Cookie
+
+app.use(express.cookieParser());
+app.use(express.session({secret: 'koink'}));
+
 // Configuration
 
 app.configure(function(){
@@ -26,9 +31,6 @@ app.configure('development', function(){
 app.configure('production', function(){
   app.use(express.errorHandler());
 });
-
-	global.map = 10;
-
 
 // Routes
 
