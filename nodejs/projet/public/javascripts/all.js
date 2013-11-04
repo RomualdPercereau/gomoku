@@ -17,12 +17,10 @@ if (location.pathname == "/game")
 		      buttons: {
 		        "1 vs 1": function() {
 		          $( this ).dialog( "close" );
-		          document.cookie = "connect.sid=" +escape(-1);
 		          mode = "PVP";
 		        },
 		        "Joueur contre IA": function() {
 		          $( this ).dialog( "close" );
-		          	document.cookie = "connect.sid=" +escape(-1);
 		  			mode = "PVI";
 
 		        }
@@ -39,8 +37,31 @@ if (location.pathname == "/game")
 	$(".line li").click(function()
 	{
 		id = this.id.split("-")[1];
+		if ($("#circle-tmp").html() != undefined)
+			$("#circle-tmp").remove();
+		if ($("#id-" + id).html().search("circle-tmp") != -1)
+		{
+			//alert("My Find");
+			$("#circle-tmp").remove();
+		}
+		//else
+			//alert("Un Find");
 		$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + id, function(data)
 		{
+			if (data['win'])
+			{
+				$.get("/rmsession")
+				$( "#dialog-confirm" ).html("Le joueur " + data['win'] + " a gagné !")
+				$( "#dialog-confirm" ).dialog({
+					title: "Jeu terminé !  ",
+			      modal: true,
+			      buttons: {
+			        Ok: function() {
+			        	window.location.href = window.location.href
+			        }
+			      }
+			    });
+			}
 			if (data['move_ok'])
 			{
 				id_player = (id_player + 1) %2
@@ -53,11 +74,28 @@ if (location.pathname == "/game")
 		});
 	})
 
+	$(".line li").mousemove(function()
+	{
+		id = this.id.split("-")[1];
+		if ($("#circle-tmp").html() != undefined)
+			$("#circle-tmp").remove();
+		if ($("#circle-" + id).html() === undefined)
+		{
+			$("#id-" + id).append("<div id='circle-tmp' class='circle'></div>");
+			$("#circle-tmp").css("background", "forestgreen");
+		}
+
+	})
+
 
 	$("#restart").click(function()
 	{
-		document.cookie = "connect.sid=" +escape(-1);
-		window.location.href = window.location.href
+		document.cookie = "connect.sid=-1";
+		$.cookie('connect.sid', -1);
+		$.get("/rmsession", function ()
+		{
+			window.location.href = window.location.href
+		});
 		return (false)
 	})
 
