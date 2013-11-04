@@ -22,12 +22,12 @@ exports.simple_test = function(req) {
 		move_ok = false;
 	else {
 		move_ok = true;
-		req.session.map[req.params.case_id] = 1;
+		req.session.map[req.params.case_id] = req.params.id_player;
 	}
 
 var json = {'id' : req.params.case_id,
 					'move_ok' : move_ok,
-					'color' : '#FF00FF',
+					'id_player' : req.params.id_player,
 					'map' : req.session.map
 				};
 	
