@@ -53,6 +53,19 @@ if (location.pathname == "/game")
 		});
 	})
 
+	$(".line li").mousemove(function()
+	{
+		id = this.id.split("-")[1];
+		if ($("#circle-tmp").html() != undefined)
+			$("#circle-tmp").remove();
+		if ($("#circle-" + id).html() === undefined)
+		{
+			$("#id-" + id).append("<div id='circle-tmp' class='circle'></div>");
+			$("#circle-tmp").css("background", "forestgreen");
+		}
+
+	})
+
 
 	$("#restart").click(function()
 	{
