@@ -1,35 +1,35 @@
 exports.simple_test = function(req) {
 
 	var new_user = true;
+	var move_ok = false;
 
 	if(req.session.lastPage)
 		new_user = false;
+	req.session.lastPage = '/arbitre';
 
 	if (new_user) {
 		var map = new Array();
 		var i = 0;
-		var j;
-		while (i < 16)
+		while (i < 256)
 		{
-			map[i] = new Array();
-			j = 0;
-			while (j < 16)
-			{
-				map[i][j] = 0;
-				j++;
-			}
+			map[i] = 0;
 			i++;
 		}
 		req.session.map = map;
 	}
 
-	req.session.lastPage = '/arbitre';
+	if (req.session.map[req.params.case_id] != 0)
+		move_ok = false;
+	else {
+		move_ok = true;
+		req.session.map[req.params.case_id] = 1;
+	}
 
-	var test = req.params.case_id;
-
-	var json = {'id' : test,
-				'color' : '#FF00FF',
-				'map' : req.session.map
+var json = {'id' : req.params.case_id,
+					'move_ok' : move_ok,
+					'color' : '#FF00FF',
+					'map' : req.session.map
 				};
+	
 				return (json);
 }
