@@ -27,6 +27,9 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
+	global.map = 10;
+
+
 // Routes
 
 app.get('/', function(req, res){
@@ -37,6 +40,7 @@ app.get('/about', routes.about);
 
 app.get('/game', routes.game);
 
+app.get('/arbitre/:case_id', routes.arbitre);
 
 app.get('/contact', routes.contact);
 
