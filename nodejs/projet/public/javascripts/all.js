@@ -39,11 +39,11 @@ if (location.pathname == "/game")
 		id = this.id.split("-")[1];
 		if ($("#circle-tmp").html() != undefined)
 			$("#circle-tmp").remove();
-		/*if ($("#id-" + id).html().search("circle-tmp") != -1)
+		if ($("#id-" + id).html().search("circle-tmp") != -1)
 		{
 			//alert("My Find");
 			$("#circle-tmp").remove();
-		}*/
+		}
 		//else
 			//alert("Un Find");
 		$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + id, function(data)
@@ -59,7 +59,7 @@ if (location.pathname == "/game")
 			}
 		});
 	})
-/*
+
 	$(".line li").mousemove(function()
 	{
 		id = this.id.split("-")[1];
@@ -72,7 +72,7 @@ if (location.pathname == "/game")
 		}
 
 	})
-*/
+
 
 	$("#restart").click(function()
 	{
