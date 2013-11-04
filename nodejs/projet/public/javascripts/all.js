@@ -27,25 +27,29 @@ if (location.pathname == "/game")
   });
 
 
-
 	$(".line li").click(function()
 	{
 		console.log("go" + mode);
 		id = this.id.split("-")[1];
-		$.getJSON("arbitre/" + id_player + "/" + id, function(data)
-		{			// $("#id-" + id).append("<div id='circle-" + id+ "' class='circle'></div>");
-
-			id_player = (id_player + 1) %2
-			console.log(data)
-			refreshMap(data['map'])
-			// $("#circle-" + id).css("background", data['color']);
-			$("#current_player").html(mode)
+		$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + id, function(data)
+		{
+			if (data['move_ok'])
+			{
+				id_player = (id_player + 1) %2
+				console.log(data)
+				refreshMap(data['map'])
+				$("#current_player").html("Joueur " + (parseInt(id_player) + 1))
+				$("#score1").html("Joueur 1 : " + 0)
+				$("#score2").html("Joueur 2 : " + 0)
+			}
 		});
 	})
+
+
 	$("#restart").click(function()
 	{
 		document.cookie = "connect.sid=" +escape(-1);
-		window.location.href=window.location.href
+		window.location.href = window.location.href
 		return (false)
 	})
 
@@ -58,7 +62,7 @@ if (location.pathname == "/game")
 				if ($("#circle-" + i).html() === undefined)
 				{
 					$("#id-" + i).append("<div id='circle-" + i+ "' class='circle'></div>");
-					$("#circle-" + i).css("background", "green");
+					$("#circle-" + i).css("background", "forestgreen");
 				}
 			}
 			if (map[i] == 2)
@@ -66,7 +70,7 @@ if (location.pathname == "/game")
 				if ($("#circle-" + i).html() === undefined)
 				{
 					$("#id-" + i).append("<div id='circle-" + i+ "' class='circle'></div>");
-					$("#circle-" + i).css("background", "#FF00FF");
+					$("#circle-" + i).css("background", "maroon");
 				}
 			}
 
