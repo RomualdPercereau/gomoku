@@ -21,6 +21,14 @@ exports.postcontact = function(req, res){
   //...
 };
 
+exports.rmsession = function (req, res)
+{
+  req.session.destroy();
+  res.status(200);
+  res.send("");
+
+}
+
 exports.arbitre = function(req, res){
 	var arb = require('../arbitre.js');
 	var ret = arb.simple_test(req);

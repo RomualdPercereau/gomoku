@@ -17,12 +17,10 @@ if (location.pathname == "/game")
 		      buttons: {
 		        "1 vs 1": function() {
 		          $( this ).dialog( "close" );
-		          document.cookie = "connect.sid=" +escape(-1);
 		          mode = "PVP";
 		        },
 		        "Joueur contre IA": function() {
 		          $( this ).dialog( "close" );
-		          	document.cookie = "connect.sid=" +escape(-1);
 		  			mode = "PVI";
 
 		        }
@@ -56,8 +54,12 @@ if (location.pathname == "/game")
 
 	$("#restart").click(function()
 	{
-		document.cookie = "connect.sid=" +escape(-1);
-		window.location.href = window.location.href
+		document.cookie = "connect.sid=-1";
+		$.cookie('connect.sid', -1);
+		$.get("/rmsession", function ()
+		{
+			window.location.href = window.location.href
+		});
 		return (false)
 	})
 
