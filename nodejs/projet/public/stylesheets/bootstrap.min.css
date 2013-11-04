@@ -121,4 +121,30 @@
 
 
 
+	#scores
+	{
+
+		text-align: left;
+		margin-top: -40px;
+		padding-left: 120px;
+		height: 60px;
+		font-size: 30px;
+
+	}
+	#score1
+	{
+		color: forestgreen;
+		display: block;
+		width: 200px;
+		float: left;
+	}
+
+	#score2
+	{
+		color: maroon;
+		float: right;
+		text-align: right;
+		padding-right: 120px;
+
+	}
 
