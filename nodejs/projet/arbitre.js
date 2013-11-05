@@ -11,7 +11,6 @@ get_pos = function(map, i) {
 		x = Math.floor(i / 19);
 	}
 	var tab = Array();
-
 	tab['x'] = x;
 	tab['y'] = y;
 	return (tab);
@@ -19,29 +18,25 @@ get_pos = function(map, i) {
 
 get_id = function(x, y) {
 	var ret = x * 19 + y;
-	console.log('pos : ' + ret);
 	return (ret);
 }
 
 check_5_h = function(map, i, id_player) {
 	var cpt = 1;
 	var pos = get_pos(map, i);
-	var inc = pos['y'] - 1;
 
 	// incr cpt on left
+	var inc = pos['y'] - 1;
 	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
 		inc--;
 		cpt++;
 	}
-	inc = pos['y'] + 1;
-
 	// incr cpt on right
+	inc = pos['y'] + 1;
 	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
 		inc++;
 		cpt++;
 	}
-
-	console.log(cpt);
 	if (cpt >= 5)
 		return (id_player);
 	return (0);
@@ -50,22 +45,19 @@ check_5_h = function(map, i, id_player) {
 check_5_v = function(map, i, id_player) {
 	var cpt = 1;
 	var pos = get_pos(map, i);
-	var inc = pos['x'] - 1;
 
 	// incr cpt on left
+	var inc = pos['x'] - 1;
 	while (inc >= 0 && map[get_id(inc, pos['y'])] == id_player) {
 		inc--;
 		cpt++;
 	}
-	inc = pos['y'] + 1;
-
 	// incr cpt on right
+	inc = pos['y'] + 1;
 	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
 		inc++;
 		cpt++;
 	}
-
-	console.log(cpt);
 	if (cpt >= 5)
 		return (id_player);
 	return (0);
@@ -74,10 +66,10 @@ check_5_v = function(map, i, id_player) {
 check_5_d1 = function(map, i, id_player) {
 	var cpt = 1;
 	var pos = get_pos(map, i);
-	var inc_x = pos['x'] - 1;
-	var inc_y = pos['y'] - 1;
 
 	// incr cpt on top left
+	var inc_x = pos['x'] - 1;
+	var inc_y = pos['y'] - 1;
 	while (inc_x >= 0 && inc_y >= 0 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x--;
 		inc_y--;
@@ -91,8 +83,6 @@ check_5_d1 = function(map, i, id_player) {
 		inc_y++;
 		cpt++;
 	}
-
-	console.log(cpt);
 	if (cpt >= 5)
 		return (id_player);
 	return (0);
@@ -101,15 +91,14 @@ check_5_d1 = function(map, i, id_player) {
 check_5_d2 = function(map, i, id_player) {
 	var cpt = 1;
 	var pos = get_pos(map, i);
+
 	var inc_x = pos['x'] + 1;
 	var inc_y = pos['y'] - 1;
-
 	while (inc_x <= 18 && inc_y >= 0 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x++;
 		inc_y--;
 		cpt++;
 	}
-
 	inc_x = pos['x'] - 1;
 	inc_y = pos['y'] + 1;
 	while (inc_x >= 0 && inc_y <= 18 && map[get_id(inc_x, inc_y)] == id_player) {
@@ -117,8 +106,6 @@ check_5_d2 = function(map, i, id_player) {
 		inc_y++;
 		cpt++;
 	}
-
-	console.log(cpt);
 	if (cpt >= 5)
 		return (id_player);
 	return (0);
@@ -126,59 +113,13 @@ check_5_d2 = function(map, i, id_player) {
 
 check_5 = function(map, i, id_player) {
 
-	// check horizontal
-	var win = check_5_h(map, i, id_player);
+	var win = check_5_h(map, i, id_player); // 5 horizontal
 	if (win == 0)
-		win = check_5_v(map, i, id_player);
+		win = check_5_v(map, i, id_player); // 5 vertical
 	if (win == 0)
-		win = check_5_d1(map, i, id_player);
+		win = check_5_d1(map, i, id_player); // 5 diagonale gauche -> droite
 	if (win == 0)
-		win = check_5_d2(map, i, id_player);
-
-	/*var i = 0;
-	var cpt = 0;
-	var curr_p = 0;
-	while (i < 361)
-	{
-		if (map[i] == 0 || (i != 0 && ((5 - cpt) > (19 - (i % 19)))))
-		{
-			cpt = 0;
-			curr_p = 0;
-		}
-		else if (map[i] == curr_p)
-			cpt++;
-		else
-		{
-			curr_p = map[i];
-			cpt = 1;
-		}
-		i++;
-		if (cpt == 5)
-			return curr_p;
-	}*/
-	// check vertical
-	//i = 0;
-	//cpt = 0;
-/*
-	while (i < 361)
-	{
-		if (map[i] == 0 || (5 - cpt) > (19 - i / 19))
-		{
-			cpt = 0;
-			curr_p = 0;
-		}
-		else if (map[i] == curr_p)
-			cpt++;
-		else
-		{
-			curr_p = map[i];
-			cpt = 1;
-		}
-		i++;
-		if (cpt == 5)
-			return curr_p;
-	}
-*/
+		win = check_5_d2(map, i, id_player); // 5 diagonale droite -> gauche
 	return win;
 }
 
@@ -208,7 +149,6 @@ exports.simple_test = function(req) {
 		req.session.prev_player = -1;
 		req.session.tmp_player = -1;
 	}
-
 	// position autorisée
 	if (req.session.map[req.params.case_id] != 0)
 		move_ok = false;
