@@ -71,12 +71,41 @@ check_5_v = function(map, i, id_player) {
 	return (0);
 }
 
+check_5_d1 = function(map, i, id_player) {
+	var cpt = 1;
+	var pos = get_pos(map, i);
+	var inc_x = pos['x'] - 1;
+	var inc_y = pos['y'] - 1;
+
+	// incr cpt on top left
+	while (inc_x >= 0 && inc_y >= 0 && map[get_id(inc_x, inc_y)] == id_player) {
+		inc_x--;
+		inc_y--;
+		cpt++;
+	}
+	// incr cpt on bottom right
+	inc_x = pos['x'] + 1;
+	inc_y = pos['y'] + 1;
+	while (inc_x <= 18 && inc_y <= 18 && map[get_id(inc_x, inc_y)] == id_player) {
+		inc_x++;
+		inc_y++;
+		cpt++;
+	}
+
+	console.log(cpt);
+	if (cpt >= 5)
+		return (id_player);
+	return (0);
+}
+
 check_5 = function(map, i, id_player) {
 
 	// check horizontal
 	var win = check_5_h(map, i, id_player);
 	if (win == 0)
 		win = check_5_v(map, i, id_player);
+	if (win == 0)
+		win = check_5_d1(map, i, id_player);
 
 	/*var i = 0;
 	var cpt = 0;
