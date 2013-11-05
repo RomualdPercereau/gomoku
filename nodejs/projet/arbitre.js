@@ -28,8 +28,6 @@ check_5_h = function(map, i, id_player) {
 	var pos = get_pos(map, i);
 	var inc = pos['y'] - 1;
 
-	console.log('ID_PLAYER : ' + id_player);
-
 	// incr cpt on left
 	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
 		inc--;
@@ -47,15 +45,38 @@ check_5_h = function(map, i, id_player) {
 	if (cpt >= 5)
 		return (id_player);
 	return (0);
+}
 
+check_5_v = function(map, i, id_player) {
+	var cpt = 1;
+	var pos = get_pos(map, i);
+	var inc = pos['x'] - 1;
 
-	console.log(i + '= [' + pos['x'] + '][' + pos['y'] + ']' );
+	// incr cpt on left
+	while (inc >= 0 && map[get_id(inc, pos['y'])] == id_player) {
+		inc--;
+		cpt++;
+	}
+	inc = pos['y'] + 1;
+
+	// incr cpt on right
+	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
+		inc++;
+		cpt++;
+	}
+
+	console.log(cpt);
+	if (cpt >= 5)
+		return (id_player);
+	return (0);
 }
 
 check_5 = function(map, i, id_player) {
 
 	// check horizontal
 	var win = check_5_h(map, i, id_player);
+	if (win == 0)
+		win = check_5_v(map, i, id_player);
 
 	/*var i = 0;
 	var cpt = 0;
