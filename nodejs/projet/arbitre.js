@@ -1,7 +1,63 @@
-check_5 = function(map) {
+get_pos = function(map, i) {
+	var y;
+	var x;
+
+	if (i == 0) {
+		x = 0;
+		y = 0;
+	}
+	else {
+		y = i % 19;
+		x = Math.floor(i / 19);
+	}
+	var tab = Array();
+
+	tab['x'] = x;
+	tab['y'] = y;
+	return (tab);
+}
+
+get_id = function(x, y) {
+	var ret = x * 19 + y;
+	console.log('pos : ' + ret);
+	return (ret);
+}
+
+check_5_h = function(map, i, id_player) {
+	var cpt = 1;
+	var pos = get_pos(map, i);
+	var inc = pos['y'] - 1;
+
+	console.log('ID_PLAYER : ' + id_player);
+
+	// incr cpt on left
+	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
+		inc--;
+		cpt++;
+	}
+	inc = pos['y'] + 1;
+
+	// incr cpt on right
+	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
+		inc++;
+		cpt++;
+	}
+
+	console.log(cpt);
+	if (cpt >= 5)
+		return (id_player);
+	return (0);
+
+
+	console.log(i + '= [' + pos['x'] + '][' + pos['y'] + ']' );
+}
+
+check_5 = function(map, i, id_player) {
 
 	// check horizontal
-	var i = 0;
+	var win = check_5_h(map, i, id_player);
+
+	/*var i = 0;
 	var cpt = 0;
 	var curr_p = 0;
 	while (i < 361)
@@ -21,10 +77,10 @@ check_5 = function(map) {
 		i++;
 		if (cpt == 5)
 			return curr_p;
-	}
+	}*/
 	// check vertical
-	i = 0;
-	cpt = 0;
+	//i = 0;
+	//cpt = 0;
 /*
 	while (i < 361)
 	{
@@ -45,7 +101,7 @@ check_5 = function(map) {
 			return curr_p;
 	}
 */
-	return 0;
+	return win;
 }
 
 exports.simple_test = function(req) {
@@ -82,7 +138,6 @@ exports.simple_test = function(req) {
 		move_ok = true;
 		req.session.prev_player = req.session.tmp_player;
 		req.session.tmp_player = req.session.map[req.params.case_id] = req.params.id_player;
-	}
 
 	// check victoire/défaite
 	if (req.session.score_p1 == 10)
@@ -90,7 +145,8 @@ exports.simple_test = function(req) {
 	else if (req.session.score_p2 == 10)
 		win = 2;
 	else
-		win = check_5(req.session.map);
+		win = check_5(req.session.map, req.params.case_id, req.params.id_player);
+	}
 
 	//req.session.prev_player = req.params.id_player;
 
@@ -106,7 +162,3 @@ exports.simple_test = function(req) {
 				};
 	return (json);
 }
-
-// score
-// detection victoire/défaite
-// règles à implémenter
