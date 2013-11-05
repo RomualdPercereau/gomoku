@@ -93,7 +93,6 @@ if (location.pathname == "/game")
 				console.log(id_player);
 			id_player--;
 		}
-
 	})
 
 
