@@ -30,7 +30,7 @@ exports.rmsession = function (req, res)
 }
 
 exports.arbitre = function(req, res){
-	var arb = require('../arbitre.js');
+	var arb = require('../arbitre/arbitre.js');
 	var ret = arb.simple_test(req);
 		
 	res.status(200);
