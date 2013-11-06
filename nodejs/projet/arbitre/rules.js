@@ -3,11 +3,36 @@ check_3_h = function(map, i, id_player) {
 	var cpt = 1;
 	var pos = get_pos(map, i);
 	var tab = Array();
-	tab.push(i);
+	//tab.push(i);
+
+	for (var inc = pos['y'] - 3; inc < pos['y'] + 4; inc++) {
+		tab.push(get_player(map, pos['x'], inc));
+	}
+	tab[3] = id_player;
+
+	if (check_pattern(tab, "X_OOO_X", id_player))
+		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "_OOO_XX", id_player))
+		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "XX_OOO_", id_player))
+		console.log("PATTERN MATCH");
+
+	if (check_pattern(tab, "XXXOO_O", id_player))
+		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "XXOOOXX", id_player))
+		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "XXOOOXX", id_player))
+		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "XXOOOXX", id_player))
+		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "XXOOOXX", id_player))
+		console.log("PATTERN MATCH");
+
+	console.log(tab);
 
 	// incr cpt on left
-	var inc = pos['y'] - 1;
-	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
+	//var inc = pos['y'] - 1;
+	/*while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
 		tab.push(get_id(pos['x'], inc));
 		inc--;
 		cpt++;
@@ -22,8 +47,8 @@ check_3_h = function(map, i, id_player) {
 		cpt++;
 	}
 	if (inc <= 18 && map[get_id(pos['x'], inc)] != id_player && map[get_id(pos['x'], inc)] != 0)
-		return (new Array());
-	tab.sort();
+		return (new Array());*/
+	//tab.sort();
 	return (tab);
 }
 
