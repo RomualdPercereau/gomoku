@@ -81,6 +81,10 @@ if (location.pathname == "/game")
 				refreshMap(data['map']);
 				update_players_data(data["score_p1"], data["score_p2"]);
 			}
+			else
+			{
+				console.log("WTF")
+			}
 		});
 	})
 
@@ -123,9 +127,11 @@ if (location.pathname == "/game")
 
 	function update_players_data(a, b)
 	{
+		if (!a || !b)
+			a = b = 0;
 		$("#current_player").html("Joueur " + (parseInt(id_player) + 1))
-		$("#score1").html("Joueur 1 : " + 0)
-		$("#score2").html("Joueur 2 : " + 0)
+		$("#score1").html("Joueur 1 : " + a)
+		$("#score2").html("Joueur 2 : " + b)
 	}
 
 	function refreshMap(map)
