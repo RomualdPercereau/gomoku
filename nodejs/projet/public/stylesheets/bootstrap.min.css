@@ -64,7 +64,7 @@
       	display: block;
       	float: left;
       	width: 63px;
-      	height: 65px;
+      	height: 63px;
       	background-image: url("/Croix.png");
       }
        .tabl   li:first-child ul li
@@ -147,4 +147,13 @@
 		padding-right: 120px;
 
 	}
+
+	#circle-tmp {
+		opacity: 0.7;
+	}
+
+	.ui-dialog-titlebar-close {
+	  visibility: hidden;
+	}
+
 
