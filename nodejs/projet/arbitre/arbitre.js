@@ -30,7 +30,7 @@ exports.simple_test = function(req) {
 	// position autorisée
 	if (req.session.map[req.params.case_id] != 0)
 		move_ok = false;
-	else if (allowed_move(map, req.params.case_id, req.params.id_player))
+	else if (allowed_move(req.session.map, req.params.case_id, req.params.id_player))
 		move_ok = false;
 	else {
 		move_ok = true;

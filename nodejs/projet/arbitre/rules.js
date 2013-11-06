@@ -1,5 +1,39 @@
-double_trois = function(map, case_id, id_player) {
+check_3_h = function(map, i, id_player) {
 
+	var cpt = 1;
+	var pos = get_pos(map, i);
+	//var tab = Array();
+	//tab.push(i);
+
+	// incr cpt on left
+	var inc = pos['y'] - 1;
+	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
+		//tab.push(get_id(pod['x'], inc));
+		inc--;
+		cpt++;
+	}
+	if (inc >= 0 && map[get_id(pos['x'], inc)] != id_player && map[get_id(pos['x'], inc)] != 0)
+		return (new Array());
+	// incr cpt on right
+	inc = pos['y'] + 1;
+	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
+		//tab.push(get_id(pod['x'], inc));
+		inc++;
+		cpt++;
+	}
+	if (inc <= 18 && map[get_id(pos['x'], inc)] != id_player && map[get_id(pos['x'], inc)] != 0)
+		return (new Array());
+	//tab.sort();
+	//return (tab);
+	return (new Array());
+}
+
+double_trois = function(map, case_id, id_player) {
+	var tab;
+
+	tab = check_3_h(map, case_id, id_player);
+	if (tab.length > 0)
+		console.log(tab);
 }
 
 allowed_move = function(map, case_id, id_player) {
