@@ -2,13 +2,13 @@ check_3_h = function(map, i, id_player) {
 
 	var cpt = 1;
 	var pos = get_pos(map, i);
-	//var tab = Array();
-	//tab.push(i);
+	var tab = Array();
+	tab.push(i);
 
 	// incr cpt on left
 	var inc = pos['y'] - 1;
 	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
-		//tab.push(get_id(pod['x'], inc));
+		tab.push(get_id(pos['x'], inc));
 		inc--;
 		cpt++;
 	}
@@ -17,23 +17,71 @@ check_3_h = function(map, i, id_player) {
 	// incr cpt on right
 	inc = pos['y'] + 1;
 	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
-		//tab.push(get_id(pod['x'], inc));
+		tab.push(get_id(pos['x'], inc));
 		inc++;
 		cpt++;
 	}
 	if (inc <= 18 && map[get_id(pos['x'], inc)] != id_player && map[get_id(pos['x'], inc)] != 0)
 		return (new Array());
-	//tab.sort();
-	//return (tab);
-	return (new Array());
+	tab.sort();
+	return (tab);
+}
+
+check_3_v = function(map, i, id_player) {
+	var cpt = 1;
+	var pos = get_pos(map, i);
+	var tab = Array();
+	tab.push(i);
+
+	// incr cpt on left
+	var inc = pos['x'] - 1;
+	while (inc >= 0 && map[get_id(inc, pos['y'])] == id_player) {
+		tab.push(get_id(inc, pos['y']));
+		inc--;
+		cpt++;
+	}
+	if (inc >= 0 && map[get_id(inc, pos['y'])] != id_player && map[get_id(inc, pos['y'])] != 0)
+		return (new Array());
+	// incr cpt on right
+	inc = pos['x'] + 1;
+	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
+		tab.push(get_id(inc, pos['y']));
+		inc++;
+		cpt++;
+	}
+	if (inc <= 18 && map[get_id(inc, pos['y'])] != id_player && map[get_id(inc, pos['y'])] != 0)
+		return (new Array());
+	tab.sort();
+	return (tab);
+}
+
+double_trois_h = function(map, case_id, id_player) {
+	var tab;
+	var other_tab;
+	var i;
+
+	tab = check_3_h(map, case_id, id_player);
+	console.log("tab horizontal : " + tab)
+	if (tab.length == 3) {
+		i = 0;
+		while (tab[i]) {
+			console.log("case " + tab[i] + "en commun ?");
+			other_tab = check_3_v(map, tab[i], id_player);
+			console.log("___ " + other_tab.length);
+			if (other_tab.length == 3)
+				return true;
+			i++;
+		}
+	}
+	else
+		return false;
+	return false;
 }
 
 double_trois = function(map, case_id, id_player) {
-	var tab;
-
-	tab = check_3_h(map, case_id, id_player);
-	if (tab.length > 0)
-		console.log(tab);
+	if (double_trois_h(map, case_id, id_player))
+		return false;
+	return true;
 }
 
 allowed_move = function(map, case_id, id_player) {
@@ -79,7 +127,7 @@ check_5_v = function(map, i, id_player, qte) {
 		cpt++;
 	}
 	// incr cpt on right
-	inc = pos['y'] + 1;
+	inc = pos['x'] + 1;
 	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
 		inc++;
 		cpt++;
