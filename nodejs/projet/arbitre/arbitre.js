@@ -6,6 +6,7 @@ exports.simple_test = function(req) {
 	var new_user = true;
 	var move_ok = false;
 	var win = 0;
+	var error_msg = "";
 
 	// check session
 	if(req.session.lastPage)
@@ -28,10 +29,14 @@ exports.simple_test = function(req) {
 		req.session.tmp_player = -1;
 	}
 	// position autorisée
-	if (req.session.map[req.params.case_id] != 0)
+	if (req.session.map[req.params.case_id] != 0) {
 		move_ok = false;
-	else if (! allowed_move(req.session.map, req.params.case_id, req.params.id_player))
+		error_msg = "Case déjà occupée";
+	}
+	else if (! allowed_move(req.session.map, req.params.case_id, req.params.id_player)) {
 		move_ok = false;
+		error_msg = "Case impossible à cause de la règle du double trois";
+	}
 	else {
 		move_ok = true;
 		req.session.prev_player = req.session.tmp_player;
@@ -54,6 +59,7 @@ exports.simple_test = function(req) {
 				'id_player' : req.params.id_player,
 				'id_prev_player' : req.session.prev_player,
 				'map' : req.session.map,
+				'error_msg' : error_msg,
 				'score_p1' : req.session.score_p1,
 				'score_p2' : req.session.score_p2,
 				'win' : win
