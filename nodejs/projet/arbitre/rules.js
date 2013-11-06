@@ -1,4 +1,16 @@
-check_5_h = function(map, i, id_player) {
+double_trois = function(map, case_id, id_player) {
+
+}
+
+allowed_move = function(map, case_id, id_player) {
+	var allowed = double_trois(map, case_id, id_player);
+	return (allowed);
+}
+
+check_5_h = function(map, i, id_player, qte) {
+	if (! qte)
+		qte = 5;
+
 	var cpt = 1;
 	var pos = get_pos(map, i);
 
@@ -14,12 +26,15 @@ check_5_h = function(map, i, id_player) {
 		inc++;
 		cpt++;
 	}
-	if (cpt >= 5)
+	if (cpt >= qte)
 		return (id_player);
 	return (0);
 }
 
-check_5_v = function(map, i, id_player) {
+check_5_v = function(map, i, id_player, qte) {
+	if (! qte)
+		qte = 5;
+
 	var cpt = 1;
 	var pos = get_pos(map, i);
 
@@ -35,12 +50,15 @@ check_5_v = function(map, i, id_player) {
 		inc++;
 		cpt++;
 	}
-	if (cpt >= 5)
+	if (cpt >= qte)
 		return (id_player);
 	return (0);
 }
 
-check_5_d1 = function(map, i, id_player) {
+check_5_d1 = function(map, i, id_player, qte) {
+	if (! qte)
+		qte = 5;
+
 	var cpt = 1;
 	var pos = get_pos(map, i);
 
@@ -60,12 +78,14 @@ check_5_d1 = function(map, i, id_player) {
 		inc_y++;
 		cpt++;
 	}
-	if (cpt >= 5)
+	if (cpt >= qte)
 		return (id_player);
 	return (0);
 }
 
-check_5_d2 = function(map, i, id_player) {
+check_5_d2 = function(map, i, id_player, qte) {
+	if (! qte)
+		qte = 5;
 	var cpt = 1;
 	var pos = get_pos(map, i);
 
@@ -83,13 +103,12 @@ check_5_d2 = function(map, i, id_player) {
 		inc_y++;
 		cpt++;
 	}
-	if (cpt >= 5)
+	if (cpt >= qte)
 		return (id_player);
 	return (0);
 }
 
 check_5 = function(map, i, id_player) {
-
 	var win = check_5_h(map, i, id_player); // 5 horizontal
 	if (win == 0)
 		win = check_5_v(map, i, id_player); // 5 vertical
