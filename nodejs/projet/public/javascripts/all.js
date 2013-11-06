@@ -3,6 +3,8 @@ $(function() {
 
 if (location.pathname == "/game")
 {
+	mode = ""
+	id_player = 0;
 
 	$.getJSON("arbitre/-1/-1", function(data)
 	{
@@ -18,19 +20,24 @@ if (location.pathname == "/game")
 		        "1 vs 1": function() {
 		          $( this ).dialog( "close" );
 		          mode = "PVP";
+		          update_players_data();
 		        },
 		        "Joueur contre IA": function() {
 		          $( this ).dialog( "close" );
 		  			mode = "PVI";
+		  			update_players_data(0, 0);
 
 		        }
 		      }
 		    });
 		}
+		else
+		{
+			// already a party in progress
+			id_player = data['id_prev_player'] - 1;
+			update_players_data(data["score_p1"], data["score_p2"]);
+		}
 	});
-
-	mode = ""
-	id_player = 0;
 
 
 
@@ -65,11 +72,8 @@ if (location.pathname == "/game")
 			if (data['move_ok'])
 			{
 				id_player = (id_player + 1) %2
-				console.log(data)
-				refreshMap(data['map'])
-				$("#current_player").html("Joueur " + (parseInt(id_player) + 1))
-				$("#score1").html("Joueur 1 : " + 0)
-				$("#score2").html("Joueur 2 : " + 0)
+				refreshMap(data['map']);
+				update_players_data(data["score_p1"], data["score_p2"]);
 			}
 		});
 	})
@@ -89,10 +93,13 @@ if (location.pathname == "/game")
 				$("#circle-tmp").css("background", "maroon");
 			else if (id_player == 3)
 				$("#circle-tmp").css("background", "red");
-			else
-				console.log(id_player);
 			id_player--;
 		}
+	})
+
+	$(".tabl").mouseout(function()
+	{
+		$("#circle-tmp").hide();
 	})
 
 
@@ -107,6 +114,13 @@ if (location.pathname == "/game")
 		return (false)
 	})
 
+
+	function update_players_data(a, b)
+	{
+		$("#current_player").html("Joueur " + (parseInt(id_player) + 1))
+		$("#score1").html("Joueur 1 : " + 0)
+		$("#score2").html("Joueur 2 : " + 0)
+	}
 
 	function refreshMap(map)
 	{
