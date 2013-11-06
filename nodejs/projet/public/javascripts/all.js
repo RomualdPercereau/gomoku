@@ -12,28 +12,34 @@ if (location.pathname == "/game")
 		if ($(".circle").length == 0)
 		{
 		    $( "#dialog-confirm" ).dialog({
+		    	closeOnEscape: false,
 		    	title: "Vous jouez ? ",
-		      resizable: false,
-		      height:140,
-		      modal: true,
-		      buttons: {
-		        "1 vs 1": function() {
-		          $( this ).dialog( "close" );
-		          mode = "PVP";
-		          update_players_data();
+		      	resizable: false,
+		      	height:140,
+		      	modal: true,
+		      	buttons:
+		      	{
+		        	"1 vs 1": function() {
+		          	$( this ).dialog( "close" );
+		          	mode = "PVP";
+		          	update_players_data();
 		        },
-		        "Joueur contre IA": function() {
-		          $( this ).dialog( "close" );
+		        	"Joueur contre IA": function()
+		        {
+		          	$( this ).dialog( "close" );
 		  			mode = "PVI";
 		  			update_players_data(0, 0);
-
 		        }
 		      }
 		    });
+		    $(".ui-icon-closethick").hide();
+
 		}
 		else
 		{
 			// already a party in progress
+			if(data['id_prev_player'] == -1)
+				data['id_prev_player'] = 2
 			id_player = data['id_prev_player'] - 1;
 			update_players_data(data["score_p1"], data["score_p2"]);
 		}
