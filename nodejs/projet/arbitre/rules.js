@@ -3,53 +3,35 @@ check_3_h = function(map, i, id_player) {
 	var cpt = 1;
 	var pos = get_pos(map, i);
 	var tab = Array();
-	//tab.push(i);
 
-	for (var inc = pos['y'] - 3; inc < pos['y'] + 4; inc++) {
+	for (var inc = pos['y'] - 4; inc < pos['y'] + 5; inc++) {
 		tab.push(get_player(map, pos['x'], inc));
 	}
-	tab[3] = id_player;
+	tab[4] = id_player;
 
-	if (check_pattern(tab, "X_OOO_X", id_player))
-		console.log("PATTERN MATCH");
-	if (check_pattern(tab, "_OOO_XX", id_player))
-		console.log("PATTERN MATCH");
-	if (check_pattern(tab, "XX_OOO_", id_player))
-		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "XX_OOO_XX", id_player))
+		return tab;
+	if (check_pattern(tab, "X_OOO_XXX", id_player))
+		return tab;
+	if (check_pattern(tab, "XXX_OOO_X", id_player))
+		return tab;
 
-	if (check_pattern(tab, "XXXOO_O", id_player))
-		console.log("PATTERN MATCH");
-	if (check_pattern(tab, "XXOOOXX", id_player))
-		console.log("PATTERN MATCH");
-	if (check_pattern(tab, "XXOOOXX", id_player))
-		console.log("PATTERN MATCH");
-	if (check_pattern(tab, "XXOOOXX", id_player))
-		console.log("PATTERN MATCH");
-	if (check_pattern(tab, "XXOOOXX", id_player))
-		console.log("PATTERN MATCH");
+	if (check_pattern(tab, "XXX_OO_O_", id_player))
+		return tab;
+	if (check_pattern(tab, "XXX_O_OO_", id_player))
+		return tab;
 
-	console.log(tab);
+	if (check_pattern(tab, "_O_OO_XXX", id_player))
+		return tab;
+	if (check_pattern(tab, "_OO_O_XXX", id_player))
+		return tab;
 
-	// incr cpt on left
-	//var inc = pos['y'] - 1;
-	/*while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
-		tab.push(get_id(pos['x'], inc));
-		inc--;
-		cpt++;
-	}
-	if (inc >= 0 && map[get_id(pos['x'], inc)] != id_player && map[get_id(pos['x'], inc)] != 0)
-		return (new Array());
-	// incr cpt on right
-	inc = pos['y'] + 1;
-	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
-		tab.push(get_id(pos['x'], inc));
-		inc++;
-		cpt++;
-	}
-	if (inc <= 18 && map[get_id(pos['x'], inc)] != id_player && map[get_id(pos['x'], inc)] != 0)
-		return (new Array());*/
-	//tab.sort();
-	return (tab);
+	if (check_pattern(tab, "XX_OO_O_X", id_player))
+		return tab;
+	if (check_pattern(tab, "X_O_OO_XX", id_player))
+		return tab;
+
+	return (new Array());
 }
 
 check_3_v = function(map, i, id_player) {
@@ -86,8 +68,8 @@ double_trois_h = function(map, case_id, id_player) {
 	var i;
 
 	tab = check_3_h(map, case_id, id_player);
-	console.log("tab horizontal : " + tab)
-	if (tab.length == 3) {
+	//console.log("tab horizontal : " + tab)
+	if (tab.length > 1) {
 		i = 0;
 		while (tab[i]) {
 			console.log("case " + tab[i] + "en commun ?");

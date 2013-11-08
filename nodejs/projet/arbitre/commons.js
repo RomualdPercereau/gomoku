@@ -1,15 +1,24 @@
 check_pattern = function(tab, pattern, id_player) {
-	for(var i = 0; i < 6; i++) {
-		console.log(pattern[i]);
+	console.log(id_player);
+	for(var i = 0; i < 9; i++) {
 		if (pattern[i] == 'O') {
-			if (tab[i] != id_player)
+		//console.log(pattern[i] + " : match entre " + tab[i] + "et " + id_player);
+
+			if (tab[i] != id_player) {
 				return (false);
+			}
 		}
 		if (pattern[i] == '_') {
-			if (tab[i] != 0 && tab[i] != id_player)
+		//console.log(pattern[i] + " : match entre " + tab[i] + "et " + id_player);
+
+			if (tab[i] != 0 && tab[i] != id_player) {
+		//console.log('b');
+
 				return (false);
+			}
 		}
 	}
+	//console.log(pattern);
 	return (true);
 }
 
