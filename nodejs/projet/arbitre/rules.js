@@ -1,3 +1,15 @@
+matching_case = function(tab, pattern, map, x) {
+	var i = 0;
+	var cases = new Array();
+
+	while (tab[i]) {
+		if (pattern[i] != 'X') {
+			cases.push(map[get_id(x, i)];
+		}
+		i++;
+	}
+}
+
 check_3_h = function(map, i, id_player) {
 
 	var cpt = 1;
@@ -10,7 +22,7 @@ check_3_h = function(map, i, id_player) {
 	tab[4] = id_player;
 
 	if (check_pattern(tab, "XX_OOO_XX", id_player))
-		return tab;
+		return matching_case(tab, "XX_OOO_XX", map, pos['x']);
 	if (check_pattern(tab, "X_OOO_XXX", id_player))
 		return tab;
 	if (check_pattern(tab, "XXX_OOO_X", id_player))
@@ -35,31 +47,7 @@ check_3_h = function(map, i, id_player) {
 }
 
 check_3_v = function(map, i, id_player) {
-	var cpt = 1;
-	var pos = get_pos(map, i);
-	var tab = Array();
-	tab.push(i);
-
-	// incr cpt on left
-	var inc = pos['x'] - 1;
-	while (inc >= 0 && map[get_id(inc, pos['y'])] == id_player) {
-		tab.push(get_id(inc, pos['y']));
-		inc--;
-		cpt++;
-	}
-	if (inc >= 0 && map[get_id(inc, pos['y'])] != id_player && map[get_id(inc, pos['y'])] != 0)
-		return (new Array());
-	// incr cpt on right
-	inc = pos['x'] + 1;
-	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
-		tab.push(get_id(inc, pos['y']));
-		inc++;
-		cpt++;
-	}
-	if (inc <= 18 && map[get_id(inc, pos['y'])] != id_player && map[get_id(inc, pos['y'])] != 0)
-		return (new Array());
-	tab.sort();
-	return (tab);
+	return (new Array());
 }
 
 double_trois_h = function(map, case_id, id_player) {
@@ -68,15 +56,17 @@ double_trois_h = function(map, case_id, id_player) {
 	var i;
 
 	tab = check_3_h(map, case_id, id_player);
-	//console.log("tab horizontal : " + tab)
+	console.log("tab horizontal : " + tab)
 	if (tab.length > 1) {
 		i = 0;
 		while (tab[i]) {
-			console.log("case " + tab[i] + "en commun ?");
-			other_tab = check_3_v(map, tab[i], id_player);
-			console.log("___ " + other_tab.length);
-			if (other_tab.length == 3)
-				return true;
+			if (tab[i] == '_' || tab[i] == 'O') {
+				console.log("case " + tab[i] + "en commun ?");
+				other_tab = check_3_v(map, tab[i], id_player);
+				console.log("___ " + other_tab.length);
+				if (other_tab.length > 1)
+					return true;
+			}
 			i++;
 		}
 	}
