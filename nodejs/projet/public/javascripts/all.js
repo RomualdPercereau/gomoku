@@ -49,6 +49,7 @@ if (location.pathname == "/game")
 
 	$(".line li").click(function()
 	{
+		$("#error").html("");
 		id = this.id.split("-")[1];
 		if ($("#circle-tmp").html() != undefined)
 			$("#circle-tmp").remove();
@@ -83,7 +84,7 @@ if (location.pathname == "/game")
 			}
 			else
 			{
-				console.log("WTF")
+				$("#error").html(data['error_msg']);
 			}
 		});
 	})
