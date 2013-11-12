@@ -10,6 +10,14 @@
 // 	}
 // }
 
+
+function point(x, y, id)
+{
+	this.x = x;
+	this.y = y;
+	this.id = id;
+}
+
 check_patterns = function (tab, id_player)
 {
 
@@ -46,9 +54,9 @@ check_3_h = function(map, i, id_player) {
 	var tab = Array();
 
 	for (var inc = pos['y'] - 4; inc < pos['y'] + 5; inc++) {
-		tab.push(get_player(map, pos['x'], inc));
+		tab.push(new point(pos['x'], inc, get_player(map, pos['x'], inc)));
 	}
-	tab[4] = id_player;
+	tab[4] = new point(pos['x'], pos['y'], id_player);
 	return (check_patterns(tab, id_player));
 }
 
@@ -57,10 +65,19 @@ check_3_v = function(map, i, id_player) {
 	var pos = get_pos(map, i);
 
 	for (var i = -4; i < 5; i++) {
-		tab.push(get_player(map, pos['x'] + i,  pos['y']));
+		tab.push(new point(pos['x'] + i, pos['y'], get_player(map, pos['x'] + i,  pos['y'])));
 	};
-	tab[4] = id_player;
+	tab[4] = new point(pos['x'], pos['y'], id_player);
 	return (check_patterns(tab, id_player));
+}
+
+
+checkcan = function(tab) {
+	for (var i in tab)
+	{
+		tab[i];
+		console.log(tab[i]);
+	}
 }
 
 double_trois_h = function(map, case_id, id_player) {
@@ -68,29 +85,38 @@ double_trois_h = function(map, case_id, id_player) {
 	var other_tab;
 	var i;
 
-	tab = check_3_v(map, case_id, id_player);
-	if (tab.length > 1) {
-		console.log("hihi");
+
+	tabv = check_3_v(map, case_id, id_player);
+	tabh = check_3_h(map, case_id, id_player);
+
+	if (tabv.length || tabh.length)
+	{
+		console.log("il est des nôtrreee ! ");
 	}
 
-	tab = check_3_h(map, case_id, id_player);
-	console.log("tab horizontal : " + tab)
-	if (tab.length > 1) {
-		console.log("OUIinnn");
-		i = 0;
-		while (tab[i]) {
-			if (tab[i] == '_' || tab[i] == 'O') {
-				console.log("case " + tab[i] + "en commun ?");
-				other_tab = check_3_v(map, tab[i], id_player);
-				console.log("___ " + other_tab.length);
-				if (other_tab.length > 1)
-					return true;
-			}
-			i++;
-		}
-	}
-	else
-		return false;
+	// tab = check_3_v(map, case_id, id_player);
+	// if (tab.length > 1) {
+	// 	console.log("hihi");
+	// }
+
+	// tab = check_3_h(map, case_id, id_player);
+	// console.log("tab horizontal : " + tab)
+	// if (tab.length > 1) {
+	// 	console.log("OUIinnn");
+	// 	i = 0;
+	// 	while (tab[i]) {
+	// 		if (tab[i] == '_' || tab[i] == 'O') {
+	// 			console.log("case " + tab[i] + "en commun ?");
+	// 			other_tab = check_3_v(map, tab[i], id_player);
+	// 			console.log("___ " + other_tab.length);
+	// 			if (other_tab.length > 1)
+	// 				return true;
+	// 		}
+	// 		i++;
+	// 	}
+	// }
+	// else
+	// 	return false;
 	return false;
 }
 

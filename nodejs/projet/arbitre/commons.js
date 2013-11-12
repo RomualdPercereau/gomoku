@@ -4,14 +4,14 @@ check_pattern = function(tab, pattern, id_player) {
 		if (pattern[i] == 'O') {
 		//console.log(pattern[i] + " : match entre " + tab[i] + "et " + id_player);
 
-			if (tab[i] != id_player) {
+			if (tab[i].id != id_player) {
 				return (false);
 			}
 		}
 		if (pattern[i] == '_') {
 		//console.log(pattern[i] + " : match entre " + tab[i] + "et " + id_player);
 
-			if (tab[i] != 0 && tab[i] != id_player) {
+			if (tab[i].id != 0 && tab[i].id != id_player) {
 		//console.log('b');
 
 				return (false);
