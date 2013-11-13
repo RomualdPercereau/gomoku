@@ -12,7 +12,7 @@ check_take_v = function(map, i, id_player) {
 	//console.log(tab);
 
 	if (check_pattern(tab, "OEEOXXX", id_player)) {
-		console.log("patter OEEOXXX match");
+		//take();
 		return (true);
 	}
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
@@ -84,6 +84,12 @@ check_patterns = function (tab, id_player)
 		return (new mmatch("XX_OO-O_X", tab));
 	if (check_pattern(tab, "X_O-OO_XX", id_player))
 		return (new mmatch("X_O-OO_XX", tab));
+
+	if (check_pattern(tab, "XXX_O-OO_", id_player))
+		return (new mmatch("XXX_O-OO", tab));
+	if (check_pattern(tab, "_OO-O_XXX", id_player))
+		return (new mmatch("_OO-O_XXX", tab));
+
 
 	return (new mmatch("", new Array()));
 
