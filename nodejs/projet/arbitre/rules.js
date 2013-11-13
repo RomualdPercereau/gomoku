@@ -58,8 +58,8 @@ check_take_h = function(mapObj, i, id_player) {
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
 		mapObj.map[get_id(pos['x'], pos['y'] + 1)] = 0;
 		mapObj.map[get_id(pos['x'], pos['y'] + 2)] = 0;
+		mapObj.score += 2;
 	}
-	mapObj.score += 2;
 	return (mapObj);
 
 }
