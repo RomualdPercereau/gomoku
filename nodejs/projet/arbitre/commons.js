@@ -1,29 +1,21 @@
 check_pattern = function(tab, pattern, id_player) {
-
-	console.log(id_player);
-	if (tab[4].id == 0)
-	{
-		console.log("c'est un put1 de tiret ! ")
-	}
 	for(var i = 0; i < 9; i++) {
 		if (pattern[i] == 'O') {
-		//console.log(pattern[i] + " : match entre " + tab[i] + "et " + id_player);
-
 			if (tab[i].id != id_player) {
 				return (false);
 			}
 		}
 		if (pattern[i] == '_' || pattern[i] == '-' ) {
-		//console.log(pattern[i] + " : match entre " + tab[i] + "et " + id_player);
-
 			if (tab[i].id != 0 && tab[i].id != id_player) {
-		//console.log('b');
-
+				return (false);
+			}
+		}
+		if (pattern[i] == 'E') {
+			if (tab[i].id == id_player || tab[i].id == 0) {
 				return (false);
 			}
 		}
 	}
-	//console.log(pattern);
 	return (true);
 }
 

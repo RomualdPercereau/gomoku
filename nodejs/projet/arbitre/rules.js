@@ -1,14 +1,52 @@
-check_take = function(map, case_id, id_player) {
-/*
+check_take_v = function(map, i, id_player) {
+	var tab = Array();
+	var pos = get_pos(map, i);
+
+
+	for (var i = -3; i < 4; i++) {
+		tab.push(new point(pos['x'] + i, pos['y'], get_player(map, pos['x'] + i,  pos['y'])));
+	};
+	tab[3] = new point(pos['x'], pos['y'], id_player);
+	//return (check_patterns(tab, id_player));
+
+	//console.log(tab);
+
+	if (check_pattern(tab, "OEEOXXX", id_player)) {
+		console.log("patter OEEOXXX match");
+		return (true);
+	}
+	if (check_pattern(tab, "XXXOEEO", id_player)) {
+		console.log("patter XXXOEEO match");
+		return (true);
+	}
+	return (false);
+}
+
+check_take_h = function(map, i, id_player) {
 	var pos = get_pos(map, i);
 	var tab = Array();
 
-	for (var inc = pos['y'] - 4; inc < pos['y'] + 5; inc++) {
-		tab.push(get_player(map, pos['x'], inc));
+	for (var inc = pos['y'] - 3; inc < pos['y'] + 4; inc++) {
+		tab.push(new point(pos['x'], inc, get_player(map, pos['x'], inc)));
 	}
-	tab[4] = id_player;
+	tab[3] = new point(pos['x'], pos['y'], id_player);
+	console.log(tab);
 
-*/
+	if (check_pattern(tab, "OEEOXXX", id_player)) {
+		console.log("patter OEEOXXX match");
+		return (true);
+	}
+	if (check_pattern(tab, "XXXOEEO", id_player)) {
+		console.log("patter XXXOEEO match");
+		return (true);
+	}
+	return (false);
+
+}
+
+check_take = function(map, i, id_player) {
+	if (!check_take_v(map, i, id_player))
+		check_take_h(map, i, id_player);
 	return (false);
 }
 
@@ -57,13 +95,13 @@ check_3_h = function(map, i, id_player, second) {
 	var tab = Array();
 	if (second === undefined)
 		second = id_player;
-	console.log("haha " + second);
+	//console.log("haha " + second);
 
 	for (var inc = pos['y'] - 4; inc < pos['y'] + 5; inc++) {
 		tab.push(new point(pos['x'], inc, get_player(map, pos['x'], inc)));
 	}
 	tab[4] = new point(pos['x'], pos['y'], second); // ICI LE PB 
-	console.log(tab);
+	//console.log(tab);
 	return (check_patterns(tab, id_player));
 }
 
@@ -72,7 +110,7 @@ check_3_v = function(map, i, id_player, second ) { // rien pour id player (O) ||
 	var pos = get_pos(map, i);
 	if (second === undefined)
 		second = id_player;
-	console.log("hihi " + second);
+	//console.log("hihi " + second);
 	for (var i = -4; i < 5; i++) {
 		tab.push(new point(pos['x'] + i, pos['y'], get_player(map, pos['x'] + i,  pos['y'])));
 	};
@@ -93,17 +131,17 @@ checkcan = function(map, match, id_player) {
 				player = 0;
 			else
 				player = id_player;
-			console.log(get_id(match.tab[i].x, match.tab[i].y));
-			console.log("je vais check := "  + "simbole " +match.pattern[pos]);
+			//console.log(get_id(match.tab[i].x, match.tab[i].y));
+		//	console.log("je vais check := "  + "simbole " +match.pattern[pos]);
 			mmatchv = check_3_v(map, get_id(match.tab[i].x, match.tab[i].y),id_player, player);
-			console.log("::je vais check := " + match.tab[i] + "simbole " +match.pattern[pos]);
+		//	console.log("::je vais check := " + match.tab[i] + "simbole " +match.pattern[pos]);
 			
 			mmatchh = check_3_h(map, get_id(match.tab[i].x, match.tab[i].y),id_player, player); // pour faire je ne sais pas quoi ^^
-
-			console.log("koink")
-			console.log(mmatchv)
-			console.log(mmatchh)
-
+//
+		//	console.log("koink")
+		//	console.log(mmatchv)
+		//	console.log(mmatchh)
+//
 			if (mmatchv.tab.length || mmatchh.tab.length)
 			{
 				console.log("Nop ! ");
