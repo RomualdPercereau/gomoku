@@ -12,7 +12,7 @@ exports.about = function(req, res){
 };
 
 exports.contact = function(req, res){
-  res.render('contact', { title: 'Express', supervar:"caca" })
+  res.render('contact', { title: 'Express', supervar:"foo" })
 };
 
 exports.postcontact = function(req, res){
@@ -38,5 +38,5 @@ exports.arbitre = function(req, res){
 };
 
 exports.game = function(req, res){
-  res.render('game', { title: 'game', supervar:"caca" })
+  res.render('game', { title: 'game', supervar:"foo" })
 };
