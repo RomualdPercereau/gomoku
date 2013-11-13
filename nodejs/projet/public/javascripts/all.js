@@ -138,6 +138,13 @@ if (location.pathname == "/game")
 	function refreshMap(map)
 	{
 		for (var i = map.length - 1; i >= 0; i--) {
+			if (map[i] == 0)
+			{
+				if ($("#circle-" + i).html() !== undefined)
+				{
+					$("#circle-" + i).remove();
+				}
+			}
 			if (map[i] == 1)
 			{
 				if ($("#circle-" + i).html() === undefined)
