@@ -128,7 +128,7 @@ if (location.pathname == "/game")
 
 	function update_players_data(a, b)
 	{
-		if (!a || !b)
+		if (a === undefined || b === undefined)
 			a = b = 0;
 		$("#current_player").html("Joueur " + (parseInt(id_player) + 1))
 		$("#score1").html("Joueur 1 : " + a)
