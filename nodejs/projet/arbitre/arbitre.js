@@ -44,7 +44,6 @@ exports.simple_test = function(req) {
 	}
 	// check mangeage
 	var editedmap = check_take(req.session.map, req.params.case_id, req.params.id_player);
-	console.log(editedmap);
 	if (editedmap.length) {
 		req.session.map = editedmap;
 		req.session.score_p1 += 2;
