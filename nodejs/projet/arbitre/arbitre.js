@@ -42,6 +42,12 @@ exports.simple_test = function(req) {
 		req.session.prev_player = req.session.tmp_player;
 		req.session.tmp_player = req.session.map[req.params.case_id] = req.params.id_player;
 
+	// check mangeage
+	if (check_take(req.session.map, req.params.case_id, req.params.id_player))
+	{
+		req.session.score_p1 += 2;
+	}
+
 	// check victoire/défaite
 	if (req.session.score_p1 == 10)
 		win = 1;
@@ -49,7 +55,6 @@ exports.simple_test = function(req) {
 		win = 2;
 	else
 		win = check_5(req.session.map, req.params.case_id, req.params.id_player);
-	}
 
 	//req.session.prev_player = req.params.id_player;
 

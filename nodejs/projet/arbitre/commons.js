@@ -1,5 +1,5 @@
 check_pattern = function(tab, pattern, id_player) {
-	console.log(id_player);
+	//console.log(id_player);
 	for(var i = 0; i < 9; i++) {
 		if (pattern[i] == 'O') {
 		//console.log(pattern[i] + " : match entre " + tab[i] + "et " + id_player);

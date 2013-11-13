@@ -1,17 +1,19 @@
-matching_case = function(tab, pattern, map, x) {
-	var i = 0;
-	var cases = new Array();
+check_take = function(map, case_id, id_player) {
+/*
+	var pos = get_pos(map, i);
+	var tab = Array();
 
-	while (tab[i]) {
-		if (pattern[i] != 'X') {
-			cases.push(map[get_id(x, i)];
-		}
-		i++;
+	for (var inc = pos['y'] - 4; inc < pos['y'] + 5; inc++) {
+		tab.push(get_player(map, pos['x'], inc));
 	}
+	tab[4] = id_player;
+
+*/
+	return (false);
 }
 
-check_3_h = function(map, i, id_player) {
 
+check_3_h = function(map, i, id_player) {
 	var cpt = 1;
 	var pos = get_pos(map, i);
 	var tab = Array();
@@ -22,7 +24,7 @@ check_3_h = function(map, i, id_player) {
 	tab[4] = id_player;
 
 	if (check_pattern(tab, "XX_OOO_XX", id_player))
-		return matching_case(tab, "XX_OOO_XX", map, pos['x']);
+		return tab;
 	if (check_pattern(tab, "X_OOO_XXX", id_player))
 		return tab;
 	if (check_pattern(tab, "XXX_OOO_X", id_player))
@@ -56,22 +58,8 @@ double_trois_h = function(map, case_id, id_player) {
 	var i;
 
 	tab = check_3_h(map, case_id, id_player);
-	console.log("tab horizontal : " + tab)
-	if (tab.length > 1) {
-		i = 0;
-		while (tab[i]) {
-			if (tab[i] == '_' || tab[i] == 'O') {
-				console.log("case " + tab[i] + "en commun ?");
-				other_tab = check_3_v(map, tab[i], id_player);
-				console.log("___ " + other_tab.length);
-				if (other_tab.length > 1)
-					return true;
-			}
-			i++;
-		}
-	}
-	else
-		return false;
+	if (tab.length > 1)
+		return false; // true
 	return false;
 }
 
