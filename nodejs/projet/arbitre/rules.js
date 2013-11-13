@@ -1,3 +1,16 @@
+function mmatch(pattern, tab)
+{
+	this.pattern = pattern;
+	this.tab = tab;
+}
+
+function point(x, y, id, symbole)
+{
+	this.x = x;
+	this.y = y;
+	this.id = id;
+}
+
 check_take_v = function(map, i, id_player) {
 	var tab = Array();
 	var pos = get_pos(map, i);
@@ -48,19 +61,6 @@ check_take = function(map, i, id_player) {
 	if (!check_take_v(map, i, id_player))
 		check_take_h(map, i, id_player);
 	return (false);
-}
-
-function mmatch(pattern, tab)
-{
-	this.pattern = pattern;
-	this.tab = tab;
-}
-
-function point(x, y, id, symbole)
-{
-	this.x = x;
-	this.y = y;
-	this.id = id;
 }
 
 check_patterns = function (tab, id_player)
