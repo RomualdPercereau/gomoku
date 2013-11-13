@@ -161,3 +161,8 @@
 		color : red;
 		line-height: 0px;
 	}
+
+	.label {
+		margin-left: 4px;
+		padding: 6px;
+	}

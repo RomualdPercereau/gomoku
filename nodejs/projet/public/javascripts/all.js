@@ -15,7 +15,6 @@ if (location.pathname == "/game")
 		    	closeOnEscape: false,
 		    	title: "Vous jouez ? ",
 		      	resizable: false,
-		      	height:140,
 		      	modal: true,
 		      	buttons:
 		      	{

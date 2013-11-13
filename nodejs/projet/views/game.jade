@@ -6,7 +6,7 @@ div(class="jumbotron")
   div(id="scores")
     p(id="score1") -- 
     p(id="score2") --
-  p(id="error") 
+  p(id="error")
   ul(class="tabl")
     counter = 0
     -   for (var i = 0; i < 19; i++){
@@ -17,3 +17,10 @@ div(class="jumbotron")
                     -      }
     -      }
 div(id="dialog-confirm")
+  p.confirm
+      input(type="checkbox", name="double")
+      label(for="double").label double 3 
+      br
+      br
+      input(type="checkbox", name="break5")
+      label(for="break5").label 5 cassable
