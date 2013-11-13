@@ -11,30 +11,27 @@ function point(x, y, id, symbole)
 	this.id = id;
 }
 
-check_take_v = function(map, i, id_player) {
+check_take_v = function(mapObj, i, id_player) {
 	var tab = Array();
-	var pos = get_pos(map, i);
+	var pos = get_pos(mapObj.map, i);
 
 
 	for (var i = -3; i < 4; i++) {
-		tab.push(new point(pos['x'] + i, pos['y'], get_player(map, pos['x'] + i,  pos['y'])));
+		tab.push(new point(pos['x'] + i, pos['y'], get_player(mapObj.map, pos['x'] + i,  pos['y'])));
 	};
 	tab[3] = new point(pos['x'], pos['y'], id_player);
 
-var ok = 0;
 	if (check_pattern(tab, "OEEOXXX", id_player)) {
-		map[get_id(pos['x'] - 1, pos['y'])] = 0;
-		map[get_id(pos['x'] - 2, pos['y'])] = 0;
-		ok = 1;
+		mapObj.map[get_id(pos['x'] - 1, pos['y'])] = 0;
+		mapObj.map[get_id(pos['x'] - 2, pos['y'])] = 0;
+		mapObj.score += 2;
 	}
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
-		map[get_id(pos['x'] + 1, pos['y'])] = 0;
-		map[get_id(pos['x'] + 2, pos['y'])] = 0;
-		ok = 1;
+		mapObj.map[get_id(pos['x'] + 1, pos['y'])] = 0;
+		mapObj.map[get_id(pos['x'] + 2, pos['y'])] = 0;
+		mapObj.score += 2;
 	}
-	if (ok)
-		return (map);
-	return (new Array());
+	return (mapObj);
 }
 
 check_take_h = function(map, i, id_player) {
@@ -44,38 +41,38 @@ check_take_h = function(map, i, id_player) {
 	for (var inc = pos['y'] - 3; inc < pos['y'] + 4; inc++) {
 		tab.push(new point(pos['x'], inc, get_player(map, pos['x'], inc)));
 	}
+
+	var newmap = new editedmap(map, 0);
+
 	tab[3] = new point(pos['x'], pos['y'], id_player);
 	console.log(tab);
-
-	var ok = 0;
 
 	if (check_pattern(tab, "OEEOXXX", id_player)) {
 		map[get_id(pos['x'], pos['y'] - 1)] = 0;
 		map[get_id(pos['x'], pos['y'] - 2)] = 0;
-		//return (map);
-		ok = 1;
+		newmap.map = map;
+		newmap.score += 2;
 	}
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
 		map[get_id(pos['x'], pos['y'] + 1)] = 0;
 		map[get_id(pos['x'], pos['y'] + 2)] = 0;
-		//return (map);
-		ok = 1;
 	}
-	if (ok)
-		return (map);
-	return (new Array());
+	newmap.map = map;
+	newmap.score += 2;
+	return (newmap);
 
 }
 
 check_take = function(map, i, id_player) {
-	var map2;
+	var newmap = new editedmap(map, 0);
 
-		map2 = check_take_v(map, i, id_player);
-		if (map2.length)
+
+		newmap = check_take_v(newmap, i, id_player);
+		/*if (map2.map.length)
 			map2 = check_take_h(map2, i, id_player);
 		else
-			map2 = check_take_h(map, i, id_player);
-	return (map2);
+			map2 = check_take_h(map, i, id_player);*/
+	return (newmap);
 }
 
 check_patterns = function (tab, id_player)
