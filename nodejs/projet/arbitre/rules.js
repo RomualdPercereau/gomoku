@@ -41,7 +41,7 @@ check_take_v = function(mapObj, i, id_player) {
 }
 
 check_take_h = function(mapObj, i, id_player) {
-	var pos = get_pos(map, i);
+	var pos = get_pos(mapObj.map, i);
 	var tab = Array();
 
 	for (var inc = pos['y'] - 3; inc < pos['y'] + 4; inc++) {
