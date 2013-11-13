@@ -15,6 +15,12 @@ check_pattern = function(tab, pattern, id_player) {
 				return (false);
 			}
 		}
+		if (pattern[i] == 'V') {
+			if (tab[i].id != 0) {
+				return (false);
+			}
+		}
+
 	}
 	return (true);
 }
