@@ -11,6 +11,12 @@ function point(x, y, id, symbole)
 	this.id = id;
 }
 
+function editedmap(map, score)
+{
+	this.map = map;
+	this.score = score;
+}
+
 check_take_v = function(mapObj, i, id_player) {
 	var tab = Array();
 	var pos = get_pos(mapObj.map, i);

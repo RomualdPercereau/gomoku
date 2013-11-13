@@ -1,12 +1,6 @@
 require('./commons.js');
 require('./rules.js');
 
-function editedmap(map, score)
-{
-	this.map = map;
-	this.score = score;
-}
-
 exports.simple_test = function(req) {
 
 	var new_user = true;
@@ -52,7 +46,7 @@ exports.simple_test = function(req) {
 	var editedmap = check_take(req.session.map, req.params.case_id, req.params.id_player);
 	if (editedmap.map.length) {
 		req.session.map = editedmap.map;
-		req.session.score_p1 += editemap.score;
+		req.session.score_p1 += editedmap.score;
 	}
 
 	// check victoire/défaite
