@@ -1,9 +1,8 @@
 check_pattern = function(tab, pattern, id_player) {
 
-	console.log(id_player);
 	if (tab[4].id == 0)
 	{
-		console.log("c'est un put1 de tiret ! ")
+		// console.log("c'est un put1 de tiret ! ")
 	}
 	for(var i = 0; i < 9; i++) {
 		if (pattern[i] == 'O') {
