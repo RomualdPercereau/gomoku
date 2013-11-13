@@ -165,7 +165,6 @@ check_3_h = function(map, i, id_player, second) {
 		tab.push(new point(pos['x'], inc, get_player(map, pos['x'], inc)));
 	}
 	tab[4] = new point(pos['x'], pos['y'], second);
-	//console.log(tab);
 	return (check_patterns(tab, id_player));
 }
 
@@ -224,16 +223,8 @@ checkcan = function(map, match, id_player, h, v, d, dr) {
 			mmatchd = check_3_d(map, get_id(match.tab[i].x, match.tab[i].y), id_player, player);
 			mmatchdr = check_3_dr(map, get_id(match.tab[i].x, match.tab[i].y), id_player, player);
 
-
-			console.log("mmatchv + " + mmatchv.tab.length)
-			console.log("mmatchh + " + mmatchh.tab.length)
-			console.log("mmatchd + " + mmatchd.tab.length)
-			console.log("mmatchdr + " + mmatchdr.tab.length)
-
-
 			if ((mmatchv.tab.length && !v)  || (mmatchh.tab.length && !h) || (mmatchd.tab.length && !d) || (mmatchdr.tab.length && !dr))
 			{
-				console.log("Non");
 				return (false);
 			}
 		}
@@ -255,7 +246,6 @@ double_trois = function(map, case_id, id_player) {
 
 	if (mmatchv.tab.length)
 	{
-		console.log("On a match en V")
 		if (!checkcan(map, mmatchv, id_player, 0, 1, 0, 0))
 			return (false);
 	}
@@ -263,51 +253,22 @@ double_trois = function(map, case_id, id_player) {
 
 	if (mmatchh.tab.length)
 	{
-		console.log("On a match en H")
 		if (!checkcan(map, mmatchh, id_player, 1, 0, 0, 0))
 			return (false);
 	}
 
 	if (mmatchd.tab.length)
 	{
-		console.log("On a match en D")
 		if (!checkcan(map, mmatchd, id_player, 0, 0, 1, 0))
 			return (false);
 	}
 
 	if (mmatchdr.tab.length)
 	{
-		console.log("On a match en DR")
 		if (!checkcan(map, mmatchdr, id_player, 0, 0, 0, 1))
 			return (false);
 	}
-
 	return (true);
-
-	// tab = check_3_v(map, case_id, id_player);
-	// if (tab.length > 1) {
-	// 	console.log("hihi");
-	// }
-
-	// tab = check_3_h(map, case_id, id_player);
-	// console.log("tab horizontal : " + tab)
-	// if (tab.length > 1) {
-	// 	console.log("OUIinnn");
-	// 	i = 0;
-	// 	while (tab[i]) {
-	// 		if (tab[i] == '_' || tab[i] == 'O') {
-	// 			console.log("case " + tab[i] + "en commun ?");
-	// 			other_tab = check_3_v(map, tab[i], id_player);
-	// 			console.log("___ " + other_tab.length);
-	// 			if (other_tab.length > 1)
-	// 				return true;
-	// 		}
-	// 		i++;
-	// 	}
-	// }
-	// else
-	// 	return false;
-	return false;
 }
 
 allowed_move = function(map, case_id, id_player) {

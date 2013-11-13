@@ -57,8 +57,6 @@ exports.main_game = function(req) {
 	else
 		win = check_5(req.session.map, req.params.case_id, req.params.id_player);
 
-	//req.session.prev_player = req.params.id_player;
-
 	// return
 	var json = {'id' : req.params.case_id,
 				'move_ok' : move_ok,
