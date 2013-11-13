@@ -7,19 +7,18 @@ check_take_v = function(map, i, id_player) {
 		tab.push(new point(pos['x'] + i, pos['y'], get_player(map, pos['x'] + i,  pos['y'])));
 	};
 	tab[3] = new point(pos['x'], pos['y'], id_player);
-	//return (check_patterns(tab, id_player));
-
-	//console.log(tab);
 
 	if (check_pattern(tab, "OEEOXXX", id_player)) {
-		//take();
-		return (true);
+		map[get_id(pos['x'] - 1, pos['y'])] = 0;
+		map[get_id(pos['x'] - 2, pos['y'])] = 0;
+		return (map);
 	}
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
-		console.log("patter XXXOEEO match");
-		return (true);
+		map[get_id(pos['x'] + 1, pos['y'])] = 0;
+		map[get_id(pos['x'] + 2, pos['y'])] = 0;
+		return (map);
 	}
-	return (false);
+	return (new Array());
 }
 
 check_take_h = function(map, i, id_player) {
@@ -33,21 +32,25 @@ check_take_h = function(map, i, id_player) {
 	console.log(tab);
 
 	if (check_pattern(tab, "OEEOXXX", id_player)) {
-		console.log("patter OEEOXXX match");
-		return (true);
+		map[get_id(pos['x'], pos['y'] - 1)] = 0;
+		map[get_id(pos['x'], pos['y'] - 2)] = 0;
+		return (map);
 	}
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
-		console.log("patter XXXOEEO match");
-		return (true);
+		map[get_id(pos['x'], pos['y'] + 1)] = 0;
+		map[get_id(pos['x'], pos['y'] + 2)] = 0;
+		return (map);
 	}
-	return (false);
+	return (new Array());
 
 }
 
 check_take = function(map, i, id_player) {
-	if (!check_take_v(map, i, id_player))
-		check_take_h(map, i, id_player);
-	return (false);
+	var map2;
+
+	//if ((map = check_take_v(map, i, id_player)) == "")
+		map2 = check_take_h(map, i, id_player);
+	return (map2);
 }
 
 function mmatch(pattern, tab)
