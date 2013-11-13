@@ -286,39 +286,67 @@ can_be_take = function (map, i, id_player)
 	}
 
 	tab[3] = new point(pos['x'], pos['y'], id_player);
-	console.log(tab);
+
+
 	if (check_pattern(tab, "XXEOOVX", id_player)) {
 		console.log("EOOVXXX")
 		return (true);
 	}
 	if (check_pattern(tab, "XVOOEXX", id_player)) {
 		console.log("XXXVOOE")
-
 		return (true);
 	}
+
+	var tab = Array();
+
+
+	for (var i = -3; i < 4; i++) {
+		tab.push(new point(pos['x'] + i, pos['y'], get_player(map, pos['x'] + i,  pos['y'])));
+	};
+	tab[3] = new point(pos['x'], pos['y'], id_player);
+
+	if (check_pattern(tab, "XXEOOVX", id_player)) {
+		console.log("EOOVXXX")
+		return (true);
+	}
+	if (check_pattern(tab, "XVOOEXX", id_player)) {
+		console.log("XXXVOOE")
+		return (true);
+	}
+
+
 	return (false);
 }
 
 check_5_h = function(map, i, id_player, qte) {
 	if (! qte)
-		qte = 5;
+		qte = 6;
 
-	var cpt = 1;
+	var cpt = 0;
 	var pos = get_pos(map, i);
 
 	// incr cpt on left
-	var inc = pos['y'] - 1;
+	var inc = pos['y'];
 	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
-		inc--;
 		if (!can_be_take(map, get_id(pos['x'], inc), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
+		inc--;
+
 	}
 	// incr cpt on right
-	inc = pos['y'] + 1;
+	inc = pos['y'];
 	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
-		inc++;
 		if (!can_be_take(map, get_id(pos['x'], inc), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
+		inc++;
 	}
 	if (cpt >= qte)
 		return (id_player);
@@ -327,24 +355,35 @@ check_5_h = function(map, i, id_player, qte) {
 
 check_5_v = function(map, i, id_player, qte) {
 	if (! qte)
-		qte = 5;
+		qte = 6;
 
-	var cpt = 1;
+	var cpt = 0;
 	var pos = get_pos(map, i);
 
 	// incr cpt on left
-	var inc = pos['x'] - 1;
+	var inc = pos['x'];
 	while (inc >= 0 && map[get_id(inc, pos['y'])] == id_player) {
-		inc--;
 		if (!can_be_take(map, get_id(inc, pos['y']), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
+		inc--;
+
 	}
 	// incr cpt on right
-	inc = pos['x'] + 1;
+	inc = pos['x'];
 	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
-		inc++;
 		if (!can_be_take(map, get_id(inc, pos['y']), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
+
+		inc++;
+
 	}
 	if (cpt >= qte)
 		return (id_player);
@@ -366,6 +405,11 @@ check_5_d1 = function(map, i, id_player, qte) {
 		inc_y--;
 		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
+
 	}
 	// incr cpt on bottom right
 	inc_x = pos['x'] + 1;
@@ -375,6 +419,10 @@ check_5_d1 = function(map, i, id_player, qte) {
 		inc_y++;
 		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
 	}
 	if (cpt >= qte)
 		return (id_player);
@@ -394,6 +442,11 @@ check_5_d2 = function(map, i, id_player, qte) {
 		inc_y--;
 		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
+
 	}
 	inc_x = pos['x'] - 1;
 	inc_y = pos['y'] + 1;
@@ -402,6 +455,10 @@ check_5_d2 = function(map, i, id_player, qte) {
 		inc_y++;
 		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
+		else
+		{
+			break;
+		}
 	}
 	if (cpt >= qte)
 		return (id_player);
