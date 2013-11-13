@@ -46,7 +46,10 @@ exports.main_game = function(req) {
 	var editedmap = check_take(req.session.map, req.params.case_id, req.params.id_player);
 	if (editedmap.map.length) {
 		req.session.map = editedmap.map;
-		req.session.score_p1 += editedmap.score;
+		if (req.params.id_player == 1)
+			req.session.score_p1 += editedmap.score;
+		else
+			req.session.score_p2 += editedmap.score;
 	}
 
 	// check victoire/défaite
