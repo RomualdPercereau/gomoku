@@ -1,7 +1,7 @@
 require('./commons.js');
 require('./rules.js');
 
-exports.simple_test = function(req) {
+exports.main_game = function(req) {
 
 	var new_user = true;
 	var move_ok = false;
