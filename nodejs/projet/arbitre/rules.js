@@ -46,7 +46,7 @@ check_take_dl = function(mapObj, i, id_player) {
 
 
 	for (var i = -3; i < 4; i++) {
-		tab.push(new point(pos['x'] + i, pos['y'] + i, get_player(mapObj.map, pos['x'] + i,  pos['y'])));
+		tab.push(new point(pos['x'] + i, pos['y'] + i, get_player(mapObj.map, pos['x'] + i,  pos['y'] + i)));
 	};
 	tab[3] = new point(pos['x'], pos['y'], id_player);
 
@@ -58,6 +58,30 @@ check_take_dl = function(mapObj, i, id_player) {
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
 		mapObj.map[get_id(pos['x'] + 1, pos['y'] + 1)] = 0;
 		mapObj.map[get_id(pos['x'] + 2, pos['y'] + 2)] = 0;
+		mapObj.score += 2;
+	}
+	return (mapObj);
+}
+
+check_take_dr = function(mapObj, i, id_player) {
+	var tab = Array();
+	var pos = get_pos(mapObj.map, i);
+
+	var j = 3;
+	for (var i = -3; i < 4; i++) {
+		tab.push(new point(pos['x'] + i, pos['y'] + j, get_player(mapObj.map, pos['x'] + i,  pos['y'] + j)));
+		j--;
+	};
+	tab[3] = new point(pos['x'], pos['y'], id_player);
+
+	if (check_pattern(tab, "OEEOXXX", id_player)) {
+		mapObj.map[get_id(pos['x'] - 1, pos['y'] + 1)] = 0;
+		mapObj.map[get_id(pos['x'] - 2, pos['y'] + 2)] = 0;
+		mapObj.score += 2;
+	}
+	if (check_pattern(tab, "XXXOEEO", id_player)) {
+		mapObj.map[get_id(pos['x'] + 1, pos['y'] - 1)] = 0;
+		mapObj.map[get_id(pos['x'] + 2, pos['y'] - 2)] = 0;
 		mapObj.score += 2;
 	}
 	return (mapObj);
@@ -94,6 +118,8 @@ check_take = function(map, i, id_player) {
 	newmap = check_take_v(newmap, i, id_player);
 	newmap = check_take_h(newmap, i, id_player);
 	newmap = check_take_dl(newmap, i, id_player);
+	newmap = check_take_dr(newmap, i, id_player);
+
 	return (newmap);
 }
 
