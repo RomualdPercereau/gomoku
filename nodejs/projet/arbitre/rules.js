@@ -21,16 +21,19 @@ check_take_v = function(map, i, id_player) {
 	};
 	tab[3] = new point(pos['x'], pos['y'], id_player);
 
+var ok = 0;
 	if (check_pattern(tab, "OEEOXXX", id_player)) {
 		map[get_id(pos['x'] - 1, pos['y'])] = 0;
 		map[get_id(pos['x'] - 2, pos['y'])] = 0;
-		return (map);
+		ok = 1;
 	}
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
 		map[get_id(pos['x'] + 1, pos['y'])] = 0;
 		map[get_id(pos['x'] + 2, pos['y'])] = 0;
-		return (map);
+		ok = 1;
 	}
+	if (ok)
+		return (map);
 	return (new Array());
 }
 
@@ -44,16 +47,22 @@ check_take_h = function(map, i, id_player) {
 	tab[3] = new point(pos['x'], pos['y'], id_player);
 	console.log(tab);
 
+	var ok = 0;
+
 	if (check_pattern(tab, "OEEOXXX", id_player)) {
 		map[get_id(pos['x'], pos['y'] - 1)] = 0;
 		map[get_id(pos['x'], pos['y'] - 2)] = 0;
-		return (map);
+		//return (map);
+		ok = 1;
 	}
 	if (check_pattern(tab, "XXXOEEO", id_player)) {
 		map[get_id(pos['x'], pos['y'] + 1)] = 0;
 		map[get_id(pos['x'], pos['y'] + 2)] = 0;
-		return (map);
+		//return (map);
+		ok = 1;
 	}
+	if (ok)
+		return (map);
 	return (new Array());
 
 }
@@ -61,8 +70,11 @@ check_take_h = function(map, i, id_player) {
 check_take = function(map, i, id_player) {
 	var map2;
 
-	//if ((map = check_take_v(map, i, id_player)) == "")
-		map2 = check_take_h(map, i, id_player);
+		map2 = check_take_v(map, i, id_player);
+		if (map2.length)
+			map2 = check_take_h(map2, i, id_player);
+		else
+			map2 = check_take_h(map, i, id_player);
 	return (map2);
 }
 
