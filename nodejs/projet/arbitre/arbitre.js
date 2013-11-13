@@ -50,9 +50,9 @@ exports.simple_test = function(req) {
 	}
 
 	// check victoire/défaite
-	if (req.session.score_p1 == 10)
+	if (req.session.score_p1 >= 10)
 		win = 1;
-	else if (req.session.score_p2 == 10)
+	else if (req.session.score_p2 >= 10)
 		win = 2;
 	else
 		win = check_5(req.session.map, req.params.case_id, req.params.id_player);
