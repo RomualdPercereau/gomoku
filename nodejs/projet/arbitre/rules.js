@@ -276,6 +276,29 @@ allowed_move = function(map, case_id, id_player) {
 	return (allowed);
 }
 
+can_be_take = function (map, i, id_player)
+{
+	var pos = get_pos(map, i);
+	var tab = Array();
+
+	for (var inc = pos['y'] - 3; inc < pos['y'] + 4; inc++) {
+		tab.push(new point(pos['x'], inc, get_player(map, pos['x'], inc)));
+	}
+
+	tab[3] = new point(pos['x'], pos['y'], id_player);
+	console.log(tab);
+	if (check_pattern(tab, "XXEOOVX", id_player)) {
+		console.log("EOOVXXX")
+		return (true);
+	}
+	if (check_pattern(tab, "XVOOEXX", id_player)) {
+		console.log("XXXVOOE")
+
+		return (true);
+	}
+	return (false);
+}
+
 check_5_h = function(map, i, id_player, qte) {
 	if (! qte)
 		qte = 5;
@@ -287,13 +310,15 @@ check_5_h = function(map, i, id_player, qte) {
 	var inc = pos['y'] - 1;
 	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
 		inc--;
-		cpt++;
+		if (!can_be_take(map, get_id(pos['x'], inc), id_player))
+			cpt++;
 	}
 	// incr cpt on right
 	inc = pos['y'] + 1;
 	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
 		inc++;
-		cpt++;
+		if (!can_be_take(map, get_id(pos['x'], inc), id_player))
+			cpt++;
 	}
 	if (cpt >= qte)
 		return (id_player);
@@ -311,13 +336,15 @@ check_5_v = function(map, i, id_player, qte) {
 	var inc = pos['x'] - 1;
 	while (inc >= 0 && map[get_id(inc, pos['y'])] == id_player) {
 		inc--;
-		cpt++;
+		if (!can_be_take(map, get_id(inc, pos['y']), id_player))
+			cpt++;
 	}
 	// incr cpt on right
 	inc = pos['x'] + 1;
 	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
 		inc++;
-		cpt++;
+		if (!can_be_take(map, get_id(inc, pos['y']), id_player))
+			cpt++;
 	}
 	if (cpt >= qte)
 		return (id_player);
@@ -337,7 +364,8 @@ check_5_d1 = function(map, i, id_player, qte) {
 	while (inc_x >= 0 && inc_y >= 0 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x--;
 		inc_y--;
-		cpt++;
+		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+			cpt++;
 	}
 	// incr cpt on bottom right
 	inc_x = pos['x'] + 1;
@@ -345,7 +373,8 @@ check_5_d1 = function(map, i, id_player, qte) {
 	while (inc_x <= 18 && inc_y <= 18 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x++;
 		inc_y++;
-		cpt++;
+		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+			cpt++;
 	}
 	if (cpt >= qte)
 		return (id_player);
@@ -363,14 +392,16 @@ check_5_d2 = function(map, i, id_player, qte) {
 	while (inc_x <= 18 && inc_y >= 0 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x++;
 		inc_y--;
-		cpt++;
+		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+			cpt++;
 	}
 	inc_x = pos['x'] - 1;
 	inc_y = pos['y'] + 1;
 	while (inc_x >= 0 && inc_y <= 18 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x--;
 		inc_y++;
-		cpt++;
+		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+			cpt++;
 	}
 	if (cpt >= qte)
 		return (id_player);
