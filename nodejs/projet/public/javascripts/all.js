@@ -41,6 +41,7 @@ if (location.pathname == "/game")
 		          	$( this ).dialog( "close" );
 		  			mode = "IVI";
 		  			update_players_data(0, 0);
+		  			iaPlay();
 		        }
 
 		      }
@@ -78,7 +79,7 @@ if (location.pathname == "/game")
 			winner(data);
 			check_move(data);
 			if (mode != "PVP")
-				iaPlay()
+				iaPlay(data['map'])
 			else
 				locked = 0;
 		});
@@ -115,16 +116,17 @@ if (location.pathname == "/game")
 		      }
 		    });
 		}
+		return (data['win']);
 	}
 
-	function iaPlay()
+	function iaPlay(map)
 	{
 		locked = 1;
 		console.log("c'est à l'ia ! ");
 		$.ajax({
 		  url: "/ia.php",
 		  type: "POST",
-		  data: "query=Wahou",
+		  data: "query=" + JSON.stringify(map),
 		  statusCode: 
 		  {
 			    404: function() {alert( "L'IA n'est pas installée au bon endroit" );},
@@ -137,12 +139,14 @@ if (location.pathname == "/game")
 			console.log(get_id(tabl[0], tabl[1]));
 			$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + get_id(tabl[0], tabl[1]), function(data)
 			{
-				winner(data);
-				check_move(data);
-				if (mode == "IVI")
-					iaPlay()
-				else
-					locked = 0;
+				if (!winner(data))
+				{
+					check_move(data);
+					if (mode == "IVI")
+						iaPlay(data['map'])
+					else
+						locked = 0;
+				}
 			});
 		});
 

@@ -29,6 +29,7 @@ class IA
 	public $colorIA;
 	public $colorPLAY2;
 	public $empty;
+	private $log;
 	const  ERROR = 1;
 
 
@@ -36,11 +37,38 @@ class IA
 	{
 	}
 
-	public function setMap($map) { $this->map = $map; }
+	public function setMap($map)
+	{
+		if (!$map || $map == "")
+			$this->log[] = "No data";
+		$this->map = json_decode(stripslashes($map));
+		if ($this->map === NULL)
+			$this->log[] = "Can't decrypt map";
+		$this->log[] = $map;
+		$this->log[] = $this->map;
+	}
+
+	private function get_id ($x, $y)
+	{
+		return ($x * 19 + $y);
+	}
 
 	public function getresult()
 	{
-		return (rand (0, 18) . ';' . rand (0, 18));
+		$x = rand (0, 18);
+		$y = rand (0, 18);
+		if ($this->map[$this->get_id($x, $y)] == 0)
+		{
+			$this->log[] = "Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
+			return ($x. ';' . $y);
+		}
+		else
+			return ($this->getresult());
+	}
+
+	public function getLog()
+	{
+		print_r($this->log);
 	}
 }
 
@@ -52,7 +80,7 @@ $ia = new IA;
 $ia->colorIA = 2;
 $ia->colorPLAY2 = 2;
 $ia->empty = 0;
-$ia->setMap($_POST['map']);
+$ia->setMap($_POST['query']);
 
 
 // echo $_POST['query'];
@@ -60,5 +88,9 @@ $ia->setMap($_POST['map']);
 
 /* Réponse */
 echo $ia->getresult();
+
+
+$ia->getLog();
+
 
 ?>

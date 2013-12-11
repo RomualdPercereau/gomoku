@@ -41,7 +41,7 @@ exports.main_game = function(req) {
 		move_ok = true;
 		req.session.prev_player = req.session.tmp_player;
 		req.session.tmp_player = req.session.map[req.params.case_id] = req.params.id_player;
-	}
+
 	// check mangeage
 	var editedmap = check_take(req.session.map, req.params.case_id, req.params.id_player);
 	if (editedmap.map.length) {
@@ -50,6 +50,7 @@ exports.main_game = function(req) {
 			req.session.score_p1 += editedmap.score;
 		else
 			req.session.score_p2 += editedmap.score;
+	}
 	}
 
 	// check victoire/défaite
