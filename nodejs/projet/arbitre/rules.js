@@ -318,10 +318,8 @@ can_be_take = function (map, i, id_player)
 	return (false);
 }
 
-check_5_h = function(map, i, id_player, qte) {
-	if (! qte)
-		qte = 6;
-
+check_5_h = function(map, i, id_player) {
+	var	qte = 6;
 	var cpt = 0;
 	var pos = get_pos(map, i);
 
@@ -353,10 +351,8 @@ check_5_h = function(map, i, id_player, qte) {
 	return (0);
 }
 
-check_5_v = function(map, i, id_player, qte) {
-	if (! qte)
-		qte = 6;
-
+check_5_v = function(map, i, id_player) {
+	var	qte = 6;
 	var cpt = 0;
 	var pos = get_pos(map, i);
 
@@ -390,10 +386,8 @@ check_5_v = function(map, i, id_player, qte) {
 	return (0);
 }
 
-check_5_d1 = function(map, i, id_player, qte) {
-	if (! qte)
-		qte = 5;
-
+check_5_d1 = function(map, i, id_player) {
+	var qte = 5;
 	var cpt = 1;
 	var pos = get_pos(map, i);
 
@@ -429,9 +423,8 @@ check_5_d1 = function(map, i, id_player, qte) {
 	return (0);
 }
 
-check_5_d2 = function(map, i, id_player, qte) {
-	if (! qte)
-		qte = 5;
+check_5_d2 = function(map, i, id_player) {
+	var qte = 5;
 	var cpt = 1;
 	var pos = get_pos(map, i);
 
