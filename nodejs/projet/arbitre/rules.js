@@ -318,7 +318,7 @@ can_be_take = function (map, i, id_player)
 	return (false);
 }
 
-check_5_h = function(map, i, id_player) {
+check_5_h = function(map, i, id_player, endbl5) {
 	var	qte = 6;
 	var cpt = 0;
 	var pos = get_pos(map, i);
@@ -326,7 +326,7 @@ check_5_h = function(map, i, id_player) {
 	// incr cpt on left
 	var inc = pos['y'];
 	while (inc >= 0 && map[get_id(pos['x'], inc)] == id_player) {
-		if (!can_be_take(map, get_id(pos['x'], inc), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(pos['x'], inc), id_player))
 			cpt++;
 		else
 		{
@@ -338,7 +338,7 @@ check_5_h = function(map, i, id_player) {
 	// incr cpt on right
 	inc = pos['y'];
 	while (inc <= 18 && map[get_id(pos['x'], inc)] == id_player) {
-		if (!can_be_take(map, get_id(pos['x'], inc), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(pos['x'], inc), id_player))
 			cpt++;
 		else
 		{
@@ -351,7 +351,7 @@ check_5_h = function(map, i, id_player) {
 	return (0);
 }
 
-check_5_v = function(map, i, id_player) {
+check_5_v = function(map, i, id_player, endbl5) {
 	var	qte = 6;
 	var cpt = 0;
 	var pos = get_pos(map, i);
@@ -359,7 +359,7 @@ check_5_v = function(map, i, id_player) {
 	// incr cpt on left
 	var inc = pos['x'];
 	while (inc >= 0 && map[get_id(inc, pos['y'])] == id_player) {
-		if (!can_be_take(map, get_id(inc, pos['y']), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(inc, pos['y']), id_player))
 			cpt++;
 		else
 		{
@@ -371,7 +371,7 @@ check_5_v = function(map, i, id_player) {
 	// incr cpt on right
 	inc = pos['x'];
 	while (inc <= 18 && map[get_id(inc, pos['y'])] == id_player) {
-		if (!can_be_take(map, get_id(inc, pos['y']), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(inc, pos['y']), id_player))
 			cpt++;
 		else
 		{
@@ -386,7 +386,7 @@ check_5_v = function(map, i, id_player) {
 	return (0);
 }
 
-check_5_d1 = function(map, i, id_player) {
+check_5_d1 = function(map, i, id_player, endbl5) {
 	var qte = 5;
 	var cpt = 1;
 	var pos = get_pos(map, i);
@@ -397,7 +397,7 @@ check_5_d1 = function(map, i, id_player) {
 	while (inc_x >= 0 && inc_y >= 0 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x--;
 		inc_y--;
-		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
 		else
 		{
@@ -411,7 +411,7 @@ check_5_d1 = function(map, i, id_player) {
 	while (inc_x <= 18 && inc_y <= 18 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x++;
 		inc_y++;
-		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
 		else
 		{
@@ -423,7 +423,7 @@ check_5_d1 = function(map, i, id_player) {
 	return (0);
 }
 
-check_5_d2 = function(map, i, id_player) {
+check_5_d2 = function(map, i, id_player, endbl5) {
 	var qte = 5;
 	var cpt = 1;
 	var pos = get_pos(map, i);
@@ -433,7 +433,7 @@ check_5_d2 = function(map, i, id_player) {
 	while (inc_x <= 18 && inc_y >= 0 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x++;
 		inc_y--;
-		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
 		else
 		{
@@ -446,7 +446,7 @@ check_5_d2 = function(map, i, id_player) {
 	while (inc_x >= 0 && inc_y <= 18 && map[get_id(inc_x, inc_y)] == id_player) {
 		inc_x--;
 		inc_y++;
-		if (!can_be_take(map, get_id(inc_x, inc_y), id_player))
+		if (!endbl5 || endbl5 && !can_be_take(map, get_id(inc_x, inc_y), id_player))
 			cpt++;
 		else
 		{
@@ -458,13 +458,13 @@ check_5_d2 = function(map, i, id_player) {
 	return (0);
 }
 
-check_5 = function(map, i, id_player) {
-	var win = check_5_h(map, i, id_player); // 5 horizontal
+check_5 = function(map, i, id_player, endbl5) {
+	var win = check_5_h(map, i, id_player, endbl5); // 5 horizontal
 	if (win == 0)
-		win = check_5_v(map, i, id_player); // 5 vertical
+		win = check_5_v(map, i, id_player, endbl5); // 5 vertical
 	if (win == 0)
-		win = check_5_d1(map, i, id_player); // 5 diagonale gauche -> droite
+		win = check_5_d1(map, i, id_player, endbl5); // 5 diagonale gauche -> droite
 	if (win == 0)
-		win = check_5_d2(map, i, id_player); // 5 diagonale droite -> gauche
+		win = check_5_d2(map, i, id_player, endbl5); // 5 diagonale droite -> gauche
 	return win;
 }

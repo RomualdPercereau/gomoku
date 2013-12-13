@@ -1,7 +1,10 @@
 require('./commons.js');
 require('./rules.js');
 
-exports.main_game = function(req) {
+exports.main_game = function(req, endbl5, endbl3) {
+
+
+	console.log(endbl5 + " " + endbl3)
 
 	var new_user = true;
 	var move_ok = false;
@@ -33,11 +36,12 @@ exports.main_game = function(req) {
 		move_ok = false;
 		error_msg = "Case déjà occupée";
 	}
-	else if (! allowed_move(req.session.map, req.params.case_id, req.params.id_player)) {
+	else if (endbl3 && !allowed_move(req.session.map, req.params.case_id, req.params.id_player)) {
 		move_ok = false;
 		error_msg = "Case impossible à cause de la règle du double trois";
 	}
 	else {
+
 		move_ok = true;
 		req.session.prev_player = req.session.tmp_player;
 		req.session.tmp_player = req.session.map[req.params.case_id] = req.params.id_player;
@@ -59,7 +63,9 @@ exports.main_game = function(req) {
 	else if (req.session.score_p2 >= 10)
 		win = 2;
 	else
-		win = check_5(req.session.map, req.params.case_id, req.params.id_player);
+		win = check_5(req.session.map, req.params.case_id, req.params.id_player, endbl5);
+
+
 
 	// return
 	var json = {'id' : req.params.case_id,

@@ -49,8 +49,13 @@ app.post('/postcontact', routes.postcontact);
 
 app.get('/rmsession', routes.rmsession);
 
-app.post('/ia.php', routes.ia);
+app.get('/endbl3/:val', routes.endbl3);
 
+app.get('/endbl5/:val', routes.endbl5);
+
+app.get('/clreplay', routes.clreplay);
+
+app.post('/ia.php', routes.ia);
 
 app.listen(process.env.port || 3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

@@ -1,3 +1,7 @@
+
+var endbl5 = 0;
+var endbl3 = 0;
+
 get_id = function(x, y) {
 	var ret = parseInt(x) * 19 + parseInt(y);
 	return (ret);
@@ -7,11 +11,23 @@ get_id = function(x, y) {
 $(function() {
 
 
+$("#breakcheck").click(function(){
+	endbl5 = (endbl5 + 1) %2
+		$.get("/endbl5/" + endbl5, function (){});
+})
+
+$("#doublecheck").click(function(){
+	endbl3 = (endbl3 + 1) %2
+		$.get("/endbl3/" + endbl3, function (){});
+})
+
+
 if (location.pathname == "/game")
 {
 	mode = ""
 	id_player = 0;
 	locked = 0;
+	demo = 0;
 
 	$.getJSON("arbitre/-1/-1", function(data)
 	{
@@ -27,21 +43,63 @@ if (location.pathname == "/game")
 		      	{
 		        	"1 vs 1": function() {
 		          	$( this ).dialog( "close" );
+		          	demo = 0;
 		          	mode = "PVP";
 		          	update_players_data();
 		        },
 		        	"Joueur contre IA": function()
 		        {
 		          	$( this ).dialog( "close" );
+		          	demo = 0;
 		  			mode = "PVI";
 		  			update_players_data(0, 0);
+		        },
+		        	"Demo random": function()
+		        {
+		          	$( this ).dialog( "close" );
+		          	demo = 0;
+		  			mode = "IVI";
+		  			update_players_data(0, 0);
+		  			iaPlay();
 		        },
 		        	"Demo": function()
 		        {
 		          	$( this ).dialog( "close" );
+		          	demo = 1;
 		  			mode = "IVI";
 		  			update_players_data(0, 0);
 		  			iaPlay();
+		        },
+		        	"Demo 2": function()
+		        {
+		          	$( this ).dialog( "close" );
+		          	demo = 2;
+		  			mode = "IVI";
+		  			update_players_data(0, 0);
+		  			iaPlay();
+		        },
+		        	"Demo 3": function()
+		        {
+		          	$( this ).dialog( "close" );
+		          	demo = 3;
+		  			mode = "IVI";
+		  			update_players_data(0, 0);
+		  			iaPlay();
+		        },
+		        	"Replay": function()
+		        {
+		          	$( this ).dialog( "close" );
+		          	demo = 42;
+		  			mode = "IVI";
+		  			update_players_data(0, 0);
+		  			iaPlay();
+		        },
+		        	"clear Replay": function()
+		        {
+					$.get("/clreplay", function ()
+					{
+						window.location.href = window.location.href
+					});
 		        }
 
 		      }
@@ -68,6 +126,9 @@ if (location.pathname == "/game")
 		locked = 1;
 		$("#error").html("");
 		id = this.id.split("-")[1];
+
+
+
 		if ($("#circle-tmp").html() != undefined)
 			$("#circle-tmp").remove();
 		if ($("#id-" + id).html().search("circle-tmp") != -1)
@@ -76,12 +137,13 @@ if (location.pathname == "/game")
 		}
 		$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + id, function(data)
 		{
-			winner(data);
-			check_move(data);
-			if (mode != "PVP")
-				iaPlay(data['map'])
-			else
-				locked = 0;
+			if (check_move(data) && !winner(data))
+			{
+				if (mode != "PVP")
+					iaPlay(data['map'])
+				else
+					locked = 0;
+			}
 		});
 	})
 
@@ -97,7 +159,9 @@ if (location.pathname == "/game")
 		else
 		{
 			$("#error").html(data['error_msg']);
+			locked = 0;
 		}
+		return (data['move_ok']);
 	}
 
 	function winner(data)
@@ -121,12 +185,13 @@ if (location.pathname == "/game")
 
 	function iaPlay(map)
 	{
+
 		locked = 1;
 		console.log("c'est à l'ia ! ");
 		$.ajax({
 		  url: "/ia.php",
 		  type: "POST",
-		  data: "query=" + JSON.stringify(map),
+		  data: "query=" + JSON.stringify(map) + "&demo=" + demo,
 		  statusCode: 
 		  {
 			    404: function() {alert( "L'IA n'est pas installée au bon endroit" );},
@@ -146,6 +211,10 @@ if (location.pathname == "/game")
 						iaPlay(data['map'])
 					else
 						locked = 0;
+				}
+				else
+				{
+					check_move(data);
 				}
 			});
 		});

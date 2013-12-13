@@ -70,6 +70,7 @@ class IA
 	{
 		print_r($this->log);
 	}
+
 }
 
 
