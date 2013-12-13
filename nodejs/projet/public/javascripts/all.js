@@ -78,11 +78,11 @@ if (location.pathname == "/game")
 		  			update_players_data(0, 0);
 		  			iaPlay();
 		        },
-		        	"Demo 3": function()
+		        	"Demo 3 (script vs IA)": function()
 		        {
 		          	$( this ).dialog( "close" );
 		          	demo = 3;
-		  			mode = "IVI";
+		  			mode = "PVI";
 		  			update_players_data(0, 0);
 		  			iaPlay();
 		        },

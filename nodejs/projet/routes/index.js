@@ -107,7 +107,8 @@ exports.game = function(req, res){
 
 exports.ia = function(req, res){
 
-if (req.body['demo'] > 0)
+
+if (req.body['demo'] > 0 && !(lines != undefined  &&  lines.length == 0))
 {
   if (lines == undefined )
   {
