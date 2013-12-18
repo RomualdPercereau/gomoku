@@ -430,7 +430,7 @@ function check_pattern($tab, $pattern, $id_player) {
 			$mmatchd = check_3_d($map, get_id($match->tab[$i]->x, $match->tab[$i]->y), $id_player, $player);
 			$mmatchdr = check_3_dr($map, get_id($match->tab[$i]->x, $match->tab[$i]->y), $id_player, $player);
 
-			if (($mmatchv->tab && !v)  || ($mmatchh.tab.length && !h) || ($mmatchd.tab.length && !d) || (mmatchdr.tab.length && !dr))
+			if ((count($mmatchv->tab) && !$v)  || (count($mmatchh->tab) && !$h) || (count($mmatchd->tab) && !$d) || (count($mmatchdr->tab) && !$dr))
 			{
 				return (false);
 			}
