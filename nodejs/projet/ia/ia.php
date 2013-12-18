@@ -356,10 +356,9 @@ function check_pattern($tab, $pattern, $id_player) {
 	if (check_pattern($tab, "_OO-O_XXX", $id_player))
 		return (new mmatch("_OO-O_XXX", $tab));
 
-	return (new mmatch("", new Array()));
+	return (new mmatch("", array()));
 
 }
-
 
   function check_3_h($map, $i, $id_player, $second) {
 	$cpt = 1;
@@ -407,13 +406,13 @@ function check_pattern($tab, $pattern, $id_player) {
 	$j = 4;
 	for ($i = -4; $i < 5; $i++) {
 		array_push($tab, new point($pos['x'] + $i, $pos['y'] + $j, get_player($map, $pos['x'] + $i, $pos['y'] + $j)));
-		j--;
+		$j--;
 	};
 	$tab[4] = new point($pos['x'], $pos['y'], $second);
 	return (check_patterns($tab, $id_player));
 }
 
-  function checkcan ($map, match, $id_player, h, v, d, dr) {
+  function checkcan ($map, $match, $id_player, $h, $v, $d, $dr) {
 	$pos = 0;
 	$player;
 	foreach ($match->tab as $i => $value)
@@ -471,7 +470,7 @@ function check_pattern($tab, $pattern, $id_player) {
 			return (false);
 	}
 
-	if (count($mmatchdr)h)
+	if (count($mmatchdr))
 	{
 		if (!checkcan($map, $mmatchdr, $id_player, 0, 0, 0, 1))
 			return (false);
