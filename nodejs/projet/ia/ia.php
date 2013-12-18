@@ -98,6 +98,7 @@ class IA
 
 	public function getLog()
 	{
+		$this->log[] = "Je suis un champignon grillé";
 		print_r($this->log);
 		print_r($this->arbitre->getLog());
 	}
