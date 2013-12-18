@@ -17,6 +17,22 @@ ini_set('error_reporting', E_ALL); // pour windows au cas où
 ** IA for Gomuku 2013
 */
 
+
+
+class mmatch 
+{
+
+	public 	$pattern;
+	public $tab;
+
+	function __construct($pattern, $tab)
+	{
+		$this->pattern = $pattern;
+		$this->tab = $tab;
+	}
+
+}
+
 class IA
 {
 
@@ -179,7 +195,7 @@ class Arbitre
 	return ($map[$ret]);
 	}
 
-	private function check_pattern($tab, $pattern, $id_player) {
+	public function check_pattern($tab, $pattern, $id_player) {
 	for($i = 0; $i < 9; $i++) {
 		if ($pattern[$i] == 'O') {
 			if ($tab[$i]->id != $id_player) {
@@ -275,10 +291,192 @@ class Arbitre
 		return (0);
 	}
 
+
+
+
+
+
+
 	public function getLog()
 	{
 		print_r($this->log);
 	}
+}
+
+
+function check_pattern($tab, $pattern, $id_player) {
+	for($i = 0; $i < 9; $i++) {
+		if ($pattern[$i] == 'O') {
+			if ($tab[$i]->id != $id_player) {
+				return (false);
+			}
+		}
+		if ($pattern[$i] == '_' || $pattern[$i] == '-' ) {
+			if ($tab[$i]->id != 0 && $tab[$i]->id != $id_player) {
+				return (false);
+			}
+		}
+		if ($pattern[$i] == 'E') {
+			if ($tab[$i]->id == $id_player || $tab[$i]->id == 0) {
+				return (false);
+			}
+		}
+		if ($pattern[$i] == 'V') {
+			if ($tab[$i]->id != 0) {
+				return (false);
+			}
+		}
+	}
+	return (true);
+}
+  function check_patterns ($tab, $id_player)
+{
+
+	if (check_pattern($tab, "XX_OOO_XX", $id_player))
+		return (new mmatch("XX_OOO_XX", $tab));
+	if (check_pattern($tab, "_O-OO_XXX", $id_player))
+		return (new mmatch("_O-OO_XXX", $tab));
+	if (check_pattern($tab, "X_OOO_XXX", $id_player))
+		return (new mmatch("X_OOO_XXX", $tab));
+	if (check_pattern($tab, "XXX_OOO_X", $id_player))
+		return (new mmatch("XXX_OOO_X", $tab));
+
+	if (check_pattern($tab, "XXX_OO-O_", $id_player))
+		return (new mmatch("XXX_OO-O_", $tab));
+	if (check_pattern($tab, "_OO-O_XXX", $id_player))
+		return (new mmatch("_OO-O_XXX", $tab));
+
+	if (check_pattern($tab, "XX_OO-O_X", $id_player))
+		return (new mmatch("XX_OO-O_X", $tab));
+	if (check_pattern($tab, "X_O-OO_XX", $id_player))
+		return (new mmatch("X_O-OO_XX", $tab));
+
+	if (check_pattern($tab, "XXX_O-OO_", $id_player))
+		return (new mmatch("XXX_O-OO", $tab));
+	if (check_pattern($tab, "_OO-O_XXX", $id_player))
+		return (new mmatch("_OO-O_XXX", $tab));
+
+	return (new mmatch("", new Array()));
+
+}
+
+
+  function check_3_h($map, $i, $id_player, $second) {
+	$cpt = 1;
+	$pos = get_pos($map, $i);
+	$tab = Array();
+	if (!$second )
+		$second = $id_player;
+
+	for ($inc = $pos['y'] - 4; $inc < $pos['y'] + 5; $inc++) {
+		array_push($tab, new point($pos['x'], $inc, get_player($map, $pos['x'], $inc)));
+	}
+	$tab[4] = new point($pos['x'], $pos['y'], $second);
+	return (check_patterns($tab, $id_player));
+}
+
+ function check_3_v($map, $i,$id_player, $second ) {
+	$tab = Array();
+	$pos = get_pos($map,$i);
+	if (!$second )
+		$second =$id_player;
+	for ($i = -4; $i < 5; $i++) {
+		array_push($tab,new point($pos['x'] + $i, $pos['y'], get_player($map, $pos['x'] + $i,  $pos['y'])));
+	};
+	$tab[4] = new point($pos['x'], $pos['y'], $second);
+	return (check_patterns($tab, $id_player));
+}
+
+  function check_3_d ($map, $i, $id_player, $second ) {
+	$tab = Array();
+	$pos = get_pos($map, $i);
+	if (!$second )
+		$second = $id_player;
+	for ($i = -4; $i < 5; $i++) {
+		array_push($tab, new point($pos['x'] + $i, $pos['y'] + $i, get_player($map, $pos['x'] + $i, $pos['y'] + $i)));
+	};
+	$tab[4] = new point($pos['x'], $pos['y'], $second);
+	return (check_patterns($tab, $id_player));
+}
+
+  function check_3_dr ($map, $i, $id_player, $second ) {
+	$tab = Array();
+	$pos = get_pos($map, $i);
+	if (!$second )
+		$second = $id_player;
+	$j = 4;
+	for ($i = -4; $i < 5; $i++) {
+		array_push($tab, new point($pos['x'] + $i, $pos['y'] + $j, get_player($map, $pos['x'] + $i, $pos['y'] + $j)));
+		j--;
+	};
+	$tab[4] = new point($pos['x'], $pos['y'], $second);
+	return (check_patterns($tab, $id_player));
+}
+
+  function checkcan ($map, match, $id_player, h, v, d, dr) {
+	$pos = 0;
+	$player;
+	foreach ($match->tab as $i => $value)
+	{
+		if ($match->pattern[$pos] == '-' || $match->pattern[$pos] == 'O')
+		{
+			if ($match->pattern[$pos] == '-')
+				$player = 0;
+			else
+				$player = $id_player;
+
+			$mmatchv = check_3_v($map, get_id($match->tab[$i]->x, $match->tab[$i]->y), $id_player, $player);
+			$mmatchh = check_3_h($map, get_id($match->tab[$i]->x, $match->tab[$i]->y), $id_player, $player);
+			$mmatchd = check_3_d($map, get_id($match->tab[$i]->x, $match->tab[$i]->y), $id_player, $player);
+			$mmatchdr = check_3_dr($map, get_id($match->tab[$i]->x, $match->tab[$i]->y), $id_player, $player);
+
+			if (($mmatchv->tab && !v)  || ($mmatchh.tab.length && !h) || ($mmatchd.tab.length && !d) || (mmatchdr.tab.length && !dr))
+			{
+				return (false);
+			}
+		}
+		$pos++;
+	}
+	return (true);
+}
+
+
+	 function double_trois($map, $case_id, $id_player) {
+	$tab;
+	$other_tab;
+	$i;
+
+	$mmatchv = check_3_v($map, $case_id, $id_player);
+	$mmatchh = check_3_h($map, $case_id, $id_player);
+	$mmatchd = check_3_d($map, $case_id, $id_player);
+	$mmatchdr = check_3_dr($map, $case_id, $id_player);
+
+
+	if (count($mmatchv))
+	{
+		if (!checkcan($map, $mmatchv, $id_player, 0, 1, 0, 0))
+			return (false);
+	}
+
+
+	if (count($mmatchh))
+	{
+		if (!checkcan($map, $mmatchh, $id_player, 1, 0, 0, 0))
+			return (false);
+	}
+
+	if (count($mmatchd))
+	{
+		if (!checkcan($map, $mmatchd, $id_player, 0, 0, 1, 0))
+			return (false);
+	}
+
+	if (count($mmatchdr)h)
+	{
+		if (!checkcan($map, $mmatchdr, $id_player, 0, 0, 0, 1))
+			return (false);
+	}
+	return (true);
 }
 
 ?>
