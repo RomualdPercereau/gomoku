@@ -122,8 +122,8 @@ class IA
 		*/
 		$this->log[] = "lines diag down up";
 		$this->log[] = $lines->concat_diagonal_down_up();
-		/*$this->log[] = "lines diag up down";
-		$this->log[] = $lines->concat_diagonal_up_down();*/
+		$this->log[] = "lines diag up down";
+		$this->log[] = $lines->concat_diagonal_up_down();
 		
 		$x = rand (0, 18);
 		$y = rand (0, 18);
@@ -225,6 +225,9 @@ class IaValueLine
 		return ($res);
 	}
 	
+	/*
+	haut droite -> bas gauche
+	*/
 	public function concat_diagonal_down_up()
 	{
 		$init_x = 0;
@@ -254,7 +257,10 @@ class IaValueLine
 		}
 		return ($tab);
 	}
+	/*
+	bas gauche -> haut droit
 	
+	*/
 	public function concat_diagonal_up_down()
 	{
 		$init_x = 18;
@@ -265,15 +271,16 @@ class IaValueLine
 		{
 			while ($init_y < 19)
 			{
-				$x = $init_x;
+				$x = ($init_x > -1 ? $init_x : 0);
 				$y = $init_y;
 				$tab[$i] = "";
 				while ($y > -1 && $y < 19)
 				{
 					$id = $this->get_id($x, $y);
 					$tab[$i] .= $this->map[$id];
-					if ($x > -1)
-						$x--;
+					$x = ($x > -1 ? $x -1 : $x);
+					$x = ($x < 0 ? 0 : $x);
+					
 					$y--;
 				}
 				$init_y++;
