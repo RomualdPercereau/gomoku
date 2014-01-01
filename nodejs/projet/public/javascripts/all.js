@@ -1,6 +1,8 @@
 
 var endbl5 = 0;
 var endbl3 = 0;
+var scorea = 0;
+var scoreb = 0;
 
 get_id = function(x, y) {
 	var ret = parseInt(x) * 19 + parseInt(y);
@@ -191,7 +193,7 @@ if (location.pathname == "/game")
 		$.ajax({
 		  url: "/ia.php",
 		  type: "POST",
-		  data: "query=" + JSON.stringify(map) + "&demo=" + demo,
+		  data: "query=" + JSON.stringify(map) + "&demo=" + demo + "&endbl5=" + endbl5 + "&endbl3=" + endbl3 + "&sca=" + scorea + "&scb=" + scoreb,
 		  statusCode: 
 		  {
 			    404: function() {alert( "L'IA n'est pas installée au bon endroit" );},
@@ -265,6 +267,9 @@ if (location.pathname == "/game")
 	{
 		if (a === undefined || b === undefined)
 			a = b = 0;
+		scorea = a;
+		scoreb = b;
+
 		$("#current_player").html("Joueur " + (parseInt(id_player) + 1))
 		$("#score1").html("Joueur 1 : " + a)
 		$("#score2").html("Joueur 2 : " + b)

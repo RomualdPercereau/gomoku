@@ -52,6 +52,9 @@ class IA
 
 	public function setMap($map)
 	{
+		$this->log[] = "Variables reçues";
+		$this->log[] = print_r($_POST, true);
+
 		if (!$map || $map == "")
 			$this->log[] = "No data";
 		$this->map = json_decode(stripslashes($map));
@@ -84,7 +87,7 @@ class IA
 	public function getresult()
 	{
 		$i = 0;
-		while ($i < 18 * 19) {
+		/*while ($i < 18 * 19) {
 				//$this->log[] = $this->colorIA;
 
 			//$this->log[] = $this->get_pos($this->map, $i)['x'] . ';' . $this->get_pos($this->map, $i)['y'];
@@ -93,14 +96,38 @@ class IA
 				if ($this->map[$i] == 0) {
 					//$this->log[] = "Pose en  $x;$y " . $this->map[$i];
 					$this->log[] = "DOUBLE prout";
-					$this->log[] = $his->get_pos($this->map, $i)['x'] . ';' . $his->get_pos($this->map, $i)['y'];
-					return ($his->get_pos($this->map, $i)['x'] . ';' . $his->get_pos($this->map, $i)['y']);
+					$this->log[] = $this->get_pos($this->map, $i)['x'] . ';' . $this->get_pos($this->map, $i)['y'];
+					return ($this->get_pos($this->map, $i)['x'] . ';' . $this->get_pos($this->map, $i)['y']);
 				}
 			}
 			$i++;
 		}
+*/
 
-
+		$lines = new IaValueLine($this->map);
+		$i = 0;
+		$this->log[] = "lines raw";
+		while ($i < 19)
+		{
+			$this->log[] = $lines->concat_raw($i);
+			$i++;
+		}
+		$i = 0;
+		$this->log[] = "lines lines";
+		while ($i < 19)
+		{
+			$this->log[] = $lines->concat_line($i);
+			$i++;
+		}
+		/* 
+		
+		IN PROGRESS
+		*/
+		$this->log[] = "lines diag down up";
+		$this->log[] = $lines->concat_diagonal_down_up();
+		/*$this->log[] = "lines diag up down";
+		$this->log[] = $lines->concat_diagonal_up_down();*/
+		
 		$x = rand (0, 18);
 		$y = rand (0, 18);
 		if ($this->map[$this->get_id($x, $y)] == 0)
@@ -121,6 +148,8 @@ class IA
 
 }
 
+
+
 $ia = new IA;
 
 /* Variables de définition pour savoir qui joue */
@@ -139,6 +168,362 @@ echo $ia->getresult();
 
 $ia->getLog();
 
+class IaValueLine
+{
+	public $tab;
+	public $map;
+	
+	function __construct($map)
+	{
+		$this->map = $map;
+	}
+	
+	private function get_id ($x, $y)
+	{
+		return (($x * 19 + $y < 18 * 18 ? $x * 19 + $y : 18* 18 ));
+	}
+
+	private function get_pos($map, $i) {
+		if ($i <= 0) {
+			$x = 0;
+			$y = 0;
+		}
+		else {
+			$y = $i % 19;
+			$x = round($i / 19);
+		}
+		$tab = Array();
+		$tab['x'] = $x;
+		$tab['y'] = $y;
+		return ($tab);
+	}
+	
+	public function concat_raw($i)
+	{
+		$x = 0;
+		$y = ($i >= 0 ? $i : 0);
+		$y = ($y < 19 ? $y : 18);
+		$res = "";
+		while ($x < 19)
+		{
+			$id = $this->get_id($x, $y);
+			$res .= $this->map[$id];
+			$x++;
+		}
+		return ($res);
+	}
+	
+	public function concat_line($i)
+	{
+		$x = ($i >= 0 ? $i : 0);
+		$x = ($x < 19 ? $x : 18);
+		$y = 0;
+		$res = "";
+		while ($y < 19)
+		{
+			$id = $this->get_id($x, $y);
+			$res .= $this->map[$id];
+			$y++;
+		}
+		return ($res);
+	}
+	
+	public function concat_diagonal_down_up()
+	{
+		$init_x = 0;
+		$init_y = 19 - 5;
+		$i = 0;
+		$tab = Array();
+		while ($init_x < (19 - 5))
+		{
+			while ($init_y > -1)
+			{
+				$x = $init_x;
+				$y = $init_y;
+				$tab[$i] = "";
+				while ($y < 19 && $y > -1)
+				{
+					$id = $this->get_id($x, $y);
+					$tab[$i] .= $this->map[$id];
+					if ($x < 19)
+						$x++;
+					$y++;
+				}
+				$init_y--;
+				$i++;
+			}
+			$init_y = 0;
+			$init_x++;
+		}
+		return ($tab);
+	}
+	
+	public function concat_diagonal_up_down()
+	{
+		$init_x = 18;
+		$init_y = 4;
+		$i = 0;
+		$tab = Array();
+		while ($init_x > -1)
+		{
+			while ($init_y < 19)
+			{
+				$x = $init_x;
+				$y = $init_y;
+				$tab[$i] = "";
+				while ($y > -1 && $y < 19)
+				{
+					$id = $this->get_id($x, $y);
+					$tab[$i] .= $this->map[$id];
+					if ($x > -1)
+						$x--;
+					$y--;
+				}
+				$init_y++;
+				$i++;
+			}
+			$init_y = 18;
+			$init_x--;
+		}
+		return ($tab);
+	}
+}
+
+class IaPatern
+{
+	public $tab;
+	public $value_tab;
+	
+	function __construct($tab)
+	{
+		$this->tab = $tab;
+		$this->value_tab = Array();
+		$this->value_tab['1']['0'] = 0; // 0 -> case vide
+		$this->value_tab['1']['1'] = 0; // 1 -> case j1
+		$this->value_tab['1']['2'] = 0; // 2 -> case j2
+		$this->value_tab['2']['0'] = 0; // 0 -> case vide
+		$this->value_tab['2']['1'] = 0; // 1 -> case j1
+		$this->value_tab['2']['2'] = 0; // 2 -> case j2
+		$this->value_tab['3']['0'] = 0; // 0 -> case vide
+		$this->value_tab['3']['1'] = 0; // 1 -> case j1
+		$this->value_tab['3']['2'] = 0; // 2 -> case j2
+		$this->value_tab['4']['0'] = 0; // 0 -> case vide
+		$this->value_tab['4']['1'] = 0; // 1 -> case j1
+		$this->value_tab['4']['2'] = 0; // 2 -> case j2
+		$this->value_tab['5']['0'] = 0; // 0 -> case vide
+		$this->value_tab['5']['1'] = 0; // 1 -> case j1
+		$this->value_tab['5']['2'] = 0; // 2 -> case j2
+	}
+	
+	
+
+}
+/*
+class IaValuePoint
+{
+	public $x;
+	public $y;
+	public $map;
+	public $color;
+	public $ia;
+	
+	function __construct($x, $y, $map, $color, $ia) {
+		$this->x = $x;
+		$this->y = $y;
+		$this->map = $pid;
+		$this->color = $color;
+		$this->ia = $ia;
+	}
+	
+	private function get_id ($x, $y)
+	{
+		return ($x * 19 + $y);
+	}
+
+	private function get_pos($map, $i) {
+		if ($i == 0) {
+			$x = 0;
+			$y = 0;
+		}
+		else {
+			$y = $i % 19;
+			$x = round($i / 19);
+		}
+		$tab = Array();
+		$tab['x'] = $x;
+		$tab['y'] = $y;
+		return ($tab);
+	}
+	
+	private function value_horizontal_left()
+	{
+		
+		$id_tmp = $this->get_id($this->x, $this->y);
+		$this->x--;
+		$count = 0;
+		$player_tmp = $map[$this->get_id($this->x, $this->y)];
+		while ($this->x > -1 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
+		{
+			$count++;
+			$this->x--;
+		}
+		$tab = Array();
+		$tab['count'] = $count;
+		if ($this->x <= -1)
+		{
+			$tab['free'] = false;
+			return ($tab);
+		}
+		$this->x--;
+		if ($count > 4)
+		{
+			$tab['free'] = ($player_tmp == $this->color ? true : false);
+			return ($tab);
+		}
+		$player = $map[$this->get_id($this->x, $this->y)];
+		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
+		return ($tab);
+	}
+	
+	private function value_horizontal_right()
+	{
+		
+		$id_tmp = $this->get_id($this->x, $this->y);
+		$this->x--;
+		$count = 0;
+		$player_tmp = $map[$this->get_id($this->x, $this->y)];
+		while ($this->x < 19 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
+		{
+			$count++;
+			$this->x++;
+		}
+		$tab = Array();
+		$tab['count'] = $count;
+		if ($this->x >= 19)
+		{
+			$tab['free'] = false;
+			$this->x  = ($this->get_pos($this->map, $id_tmp))['x'];
+			$this->y  = ($this->get_pos($this->map, $id_tmp))['y'];
+			return ($tab);
+		}
+		
+		if ($count > 4)
+		{
+			$tab['free'] = ($player_tmp == $this->color ? true : false);
+			$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
+			$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
+			return ($tab);
+		}
+		
+		$player = $map[$this->get_id(($this->x + 1), $this->y)];
+		$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
+		$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
+		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
+		return ($tab);
+	}
+	
+	private function value_horizontal()
+	{
+		$tabs = $this->value_horizontal_left();
+		$tabs2 = $this->value_horizontal_right();
+		$res_tab = Array();
+		$res_tab[($tabs['count'])][($tabs['free'])] = 1;
+		$res_tab[($tabs2['count'])][($tabs2['free'])] = (isset($res_tab[($tabs2['count'])][($tabs2['free'])]) ? $res_tab[($tabs2['count'])][($tabs2['free'])] + 1 : 1);
+		return ($res_tab);
+	}
+	
+	
+	
+	private function value_vertical_down()
+	{
+		
+		$id_tmp = $this->get_id($this->x, $this->y);
+		$this->y++;
+		$count = 0;
+		$player_tmp = $map[$this->get_id($this->x, $this->y)];
+		while ($this->y < 19 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
+		{
+			$count++;
+			$this->y++;
+		}
+		$tab = Array();
+		$tab['count'] = $count;
+		if ($this->y >= 19)
+		{
+			$tab['free'] = false;
+			return ($tab);
+		}
+		$this->y++;
+		if ($count > 4)
+		{
+			$tab['free'] = ($player_tmp == $this->color ? true : false);
+			return ($tab);
+		}
+		$player = $map[$this->get_id($this->x, ($this->y + 1))];
+		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
+		return ($tab);
+	}
+	
+	private function value_vertical_top()
+	{
+		
+		$id_tmp = $this->get_id($this->x, $this->y);
+		$this->y--;
+		$count = 0;
+		$player_tmp = $map[$this->get_id($this->x, $this->y)];
+		while ($this->y > -1 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
+		{
+			$count++;
+			$this->y--;
+		}
+		$tab = Array();
+		$tab['count'] = $count;
+		if ($this->y <= -1)
+		{
+			$tab['free'] = false;
+			$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
+			$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
+			return ($tab);
+		}
+		
+		if ($count > 4)
+		{
+			$tab['free'] = ($player_tmp == $this->color ? true : false);
+			$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
+			$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
+			return ($tab);
+		}
+		
+		$player = $map[$this->get_id(($this->x), ($this->y - 1)];
+		$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
+		$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
+		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
+		return ($tab);
+	}
+	
+	private function value_vertical()
+	{
+		$tabs = $this->value_vertiacal_top();
+		$tabs2 = $this->value_vertical_down();
+		$res_tab = Array();
+		$res_tab[($tabs['count'])][($tabs['free'])] = 1;
+		$res_tab[($tabs2['count'])][($tabs2['free'])] = (isset($res_tab[($tabs2['count'])][($tabs2['free'])]) ? $res_tab[($tabs2['count'])][($tabs2['free'])] + 1 : 1);
+		return ($res_tab);
+	}
+	
+	
+	
+	public function value_pos()
+	{
+		$tabs = $this->value_vertiacal();
+		$tabs2 = $this->value_horizontal();
+		$res_tab = Array();
+		$res_tab[($tabs['count'])][($tabs['free'])] = 1;
+		$res_tab[($tabs2['count'])][($tabs2['free'])] = (isset($res_tab[($tabs2['count'])][($tabs2['free'])]) ? $res_tab[($tabs2['count'])][($tabs2['free'])] + 1 : 1);
+		return ($res_tab);
+	}
+}
+*/
 /**
 * Retranscription du JS en PHP de l'arbitre
 */
