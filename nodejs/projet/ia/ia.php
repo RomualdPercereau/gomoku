@@ -52,6 +52,9 @@ class IA
 
 	public function setMap($map)
 	{
+		$this->log[] = "Variables reçues";
+		$this->log[] = print_r($_POST, true);
+
 		if (!$map || $map == "")
 			$this->log[] = "No data";
 		$this->map = json_decode(stripslashes($map));
@@ -100,10 +103,11 @@ class IA
 			$i++;
 		}
 */
-
 		$lines = new IaValueLine($this->map);
-		$i = 0;
-		$this->log[] = "lines raw";
+		$i = 0;/*
+		$this->log[] = "count value";
+		$this->log[] = print_r(array_count_values($this->map));*/
+		$this->log[] = "lines rawss";
 		while ($i < 19)
 		{
 			$this->log[] = $lines->concat_raw($i);
@@ -144,8 +148,6 @@ class IA
 	}
 
 }
-
-
 
 $ia = new IA;
 
@@ -241,12 +243,11 @@ class IaValueLine
 				$x = $init_x;
 				$y = $init_y;
 				$tab[$i] = "";
-				while ($y < 19 && $y > -1)
+				while (($y > -1 && $y < 19) && ($x > -1 && $x < 19))
 				{
 					$id = $this->get_id($x, $y);
 					$tab[$i] .= $this->map[$id];
-					if ($x < 19)
-						$x++;
+					 $x++;
 					$y++;
 				}
 				$init_y--;
@@ -267,20 +268,18 @@ class IaValueLine
 		$init_y = 4;
 		$i = 0;
 		$tab = Array();
-		while ($init_x > -1)
+		while ($init_x > 4)
 		{
 			while ($init_y < 19)
 			{
-				$x = ($init_x > -1 ? $init_x : 0);
+				$x = $init_x;
 				$y = $init_y;
 				$tab[$i] = "";
-				while ($y > -1 && $y < 19)
+				while (($y > -1 && $y < 19) && ($x > -1 && $x < 19))
 				{
 					$id = $this->get_id($x, $y);
 					$tab[$i] .= $this->map[$id];
-					$x = ($x > -1 ? $x -1 : $x);
-					$x = ($x < 0 ? 0 : $x);
-					
+					$x--;
 					$y--;
 				}
 				$init_y++;
@@ -297,9 +296,17 @@ class IaPatern
 {
 	public $tab;
 	public $value_tab;
+	public $turn;
+	public $double_trois;
+	public $five_breakable;
+	public $score_ia;
+	public $score_j;
+	public $last_id; // dernier coup jouer
+	public $user; // 0 -> ia, 1 -> joueur
 	
-	function __construct($tab)
+	function __construct($tab, $post, $last_id, $user)
 	{
+		$this->last_id = $last_id;
 		$this->tab = $tab;
 		$this->value_tab = Array();
 		$this->value_tab['1']['0'] = 0; // 0 -> case vide
@@ -317,217 +324,122 @@ class IaPatern
 		$this->value_tab['5']['0'] = 0; // 0 -> case vide
 		$this->value_tab['5']['1'] = 0; // 1 -> case j1
 		$this->value_tab['5']['2'] = 0; // 2 -> case j2
+		$tmp = (array_count_values($this->map));
+		$this->turn = 19 * 19 - $tmp[0];
+		$this->double_trois = $post['endbl3'];
+		$this->five_breakable = $pos['endbl5'];
+		$this->score_j = $post['sca'];
+		$this->score_ia = $post['scb'];
+		$this->user = $user;
 	}
 	
 	
+	public function parse_line($token)
+	{
+		$tab = Array();
+		$i = 0;
+		$count = 0;
+		$max = count($token);
+		$j = 0;
+		$player = 0;
+		$is = false;
+		while ($i < $max)
+		{
+			if (($player == $token[$i]) || ($player == 9 && $token[$i] == 9))
+			{
+				$is = ($token[$i] == 9 ? true : $is);
+				$count++;
+			}
+			else
+			{
+				$tab[$j]['count'] = $count;
+				$tab[$j]['played'] = $is;
+				$tab[$j++]['player'] = $player;
+				
+				$player = $token[$i];
+				$count = 0;
+				$is = false;
+			}
+			$i++;
+		}
+		return ($tab);
+	}
+	
+	public function value_parse_line($tab)
+	{
+		$i = 0;
+		$max = count($tab);
+		$score = 0;
+		while ($i < $max)
+		{
+			if ($i > 0 && ($i + 1) < $max && $tab[($i)]['player'] != 0)
+			{
+				if ($tab[($i - 1)]['played'] == true && $tab[($i + 1)]['player'] == $tab[($i - 1)]['player'])
+					$score += 2;
+				if ($tab[($i + 1)]['played'] == true && $tab[($i - 1)]['player'] == $tab[($i - 1)]['player'])
+					$score += 2;
+			}
+			$i++;
+		}
+		if ($this->user)
+			$this->score_j += $score;
+		else
+			$this->score_ia += $score;
+	}
+
 
 }
-/*
-class IaValuePoint
+
+class IaMachine
 {
-	public $x;
-	public $y;
 	public $map;
-	public $color;
-	public $ia;
+	public $map_val;
+	public $tab_best_val;
+	public $deep_lvl;
+	public $turn;
+	public $double_trois;
+	public $five_breakable;
+	public $score_ia;
+	public $score_j;
+	public $last_id; // dernier coup jouer
+	public $user; // 0 -> ia, 1 -> joueur
 	
-	function __construct($x, $y, $map, $color, $ia) {
-		$this->x = $x;
-		$this->y = $y;
-		$this->map = $pid;
-		$this->color = $color;
-		$this->ia = $ia;
+	function __construct($map, $post, $user)
+	{
+		$this->map = $map;
+		$tmp = (array_count_values($this->map));
+		$this->turn = 19 * 19 - $tmp[0];
+		$this->double_trois = $post['endbl3'];
+		$this->five_breakable = $pos['endbl5'];
+		$this->score_j = $post['sca'];
+		$this->score_ia = $post['scb'];
+		$this->user = 0;
+		$this->deep_lvl = 1;
 	}
 	
-	private function get_id ($x, $y)
+	private function make_rdm()
 	{
-		return ($x * 19 + $y);
+		$x = rand (0, 18);
+		$y = rand (0, 18);
+		if ($this->map[$this->get_id($x, $y)] == 0)
+		{
+			//$this->log[] = "Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
+			return ($x. ';' . $y);
+		}
+		else
+			return ($this->make_rdm());
+	}
+	
+	public function run_machine()
+	{
+		if ($this->turn == 1)
+			return ($this->make_rdm());
+		return ($this->make_rdm());
 	}
 
-	private function get_pos($map, $i) {
-		if ($i == 0) {
-			$x = 0;
-			$y = 0;
-		}
-		else {
-			$y = $i % 19;
-			$x = round($i / 19);
-		}
-		$tab = Array();
-		$tab['x'] = $x;
-		$tab['y'] = $y;
-		return ($tab);
-	}
 	
-	private function value_horizontal_left()
-	{
-		
-		$id_tmp = $this->get_id($this->x, $this->y);
-		$this->x--;
-		$count = 0;
-		$player_tmp = $map[$this->get_id($this->x, $this->y)];
-		while ($this->x > -1 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
-		{
-			$count++;
-			$this->x--;
-		}
-		$tab = Array();
-		$tab['count'] = $count;
-		if ($this->x <= -1)
-		{
-			$tab['free'] = false;
-			return ($tab);
-		}
-		$this->x--;
-		if ($count > 4)
-		{
-			$tab['free'] = ($player_tmp == $this->color ? true : false);
-			return ($tab);
-		}
-		$player = $map[$this->get_id($this->x, $this->y)];
-		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
-		return ($tab);
-	}
-	
-	private function value_horizontal_right()
-	{
-		
-		$id_tmp = $this->get_id($this->x, $this->y);
-		$this->x--;
-		$count = 0;
-		$player_tmp = $map[$this->get_id($this->x, $this->y)];
-		while ($this->x < 19 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
-		{
-			$count++;
-			$this->x++;
-		}
-		$tab = Array();
-		$tab['count'] = $count;
-		if ($this->x >= 19)
-		{
-			$tab['free'] = false;
-			$this->x  = ($this->get_pos($this->map, $id_tmp))['x'];
-			$this->y  = ($this->get_pos($this->map, $id_tmp))['y'];
-			return ($tab);
-		}
-		
-		if ($count > 4)
-		{
-			$tab['free'] = ($player_tmp == $this->color ? true : false);
-			$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
-			$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
-			return ($tab);
-		}
-		
-		$player = $map[$this->get_id(($this->x + 1), $this->y)];
-		$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
-		$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
-		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
-		return ($tab);
-	}
-	
-	private function value_horizontal()
-	{
-		$tabs = $this->value_horizontal_left();
-		$tabs2 = $this->value_horizontal_right();
-		$res_tab = Array();
-		$res_tab[($tabs['count'])][($tabs['free'])] = 1;
-		$res_tab[($tabs2['count'])][($tabs2['free'])] = (isset($res_tab[($tabs2['count'])][($tabs2['free'])]) ? $res_tab[($tabs2['count'])][($tabs2['free'])] + 1 : 1);
-		return ($res_tab);
-	}
-	
-	
-	
-	private function value_vertical_down()
-	{
-		
-		$id_tmp = $this->get_id($this->x, $this->y);
-		$this->y++;
-		$count = 0;
-		$player_tmp = $map[$this->get_id($this->x, $this->y)];
-		while ($this->y < 19 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
-		{
-			$count++;
-			$this->y++;
-		}
-		$tab = Array();
-		$tab['count'] = $count;
-		if ($this->y >= 19)
-		{
-			$tab['free'] = false;
-			return ($tab);
-		}
-		$this->y++;
-		if ($count > 4)
-		{
-			$tab['free'] = ($player_tmp == $this->color ? true : false);
-			return ($tab);
-		}
-		$player = $map[$this->get_id($this->x, ($this->y + 1))];
-		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
-		return ($tab);
-	}
-	
-	private function value_vertical_top()
-	{
-		
-		$id_tmp = $this->get_id($this->x, $this->y);
-		$this->y--;
-		$count = 0;
-		$player_tmp = $map[$this->get_id($this->x, $this->y)];
-		while ($this->y > -1 && $player_tmp == $map[$this->get_id($this->x, $this->y)])
-		{
-			$count++;
-			$this->y--;
-		}
-		$tab = Array();
-		$tab['count'] = $count;
-		if ($this->y <= -1)
-		{
-			$tab['free'] = false;
-			$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
-			$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
-			return ($tab);
-		}
-		
-		if ($count > 4)
-		{
-			$tab['free'] = ($player_tmp == $this->color ? true : false);
-			$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
-			$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
-			return ($tab);
-		}
-		
-		$player = $map[$this->get_id(($this->x), ($this->y - 1)];
-		$this->x  = $this->get_pos($this->map, $id_tmp)['x'];
-		$this->y  = $this->get_pos($this->map, $id_tmp)['y'];
-		$tab['free'] = ($player_tmp == $player && $this->color == $player ? true : false);
-		return ($tab);
-	}
-	
-	private function value_vertical()
-	{
-		$tabs = $this->value_vertiacal_top();
-		$tabs2 = $this->value_vertical_down();
-		$res_tab = Array();
-		$res_tab[($tabs['count'])][($tabs['free'])] = 1;
-		$res_tab[($tabs2['count'])][($tabs2['free'])] = (isset($res_tab[($tabs2['count'])][($tabs2['free'])]) ? $res_tab[($tabs2['count'])][($tabs2['free'])] + 1 : 1);
-		return ($res_tab);
-	}
-	
-	
-	
-	public function value_pos()
-	{
-		$tabs = $this->value_vertiacal();
-		$tabs2 = $this->value_horizontal();
-		$res_tab = Array();
-		$res_tab[($tabs['count'])][($tabs['free'])] = 1;
-		$res_tab[($tabs2['count'])][($tabs2['free'])] = (isset($res_tab[($tabs2['count'])][($tabs2['free'])]) ? $res_tab[($tabs2['count'])][($tabs2['free'])] + 1 : 1);
-		return ($res_tab);
-	}
 }
-*/
+
 /**
 * Retranscription du JS en PHP de l'arbitre
 */
@@ -680,12 +592,6 @@ class Arbitre
 		return (0);
 	}
 
-
-
-
-
-
-
 	public function getLog()
 	{
 		print_r($this->log);
@@ -718,7 +624,8 @@ function check_pattern($tab, $pattern, $id_player) {
 	}
 	return (true);
 }
-  function check_patterns ($tab, $id_player)
+ 
+function check_patterns ($tab, $id_player)
 {
 
 	if (check_pattern($tab, "XX_OOO_XX", $id_player))

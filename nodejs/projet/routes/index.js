@@ -147,7 +147,7 @@ else
   {
     headers: {'content-type' : 'application/x-www-form-urlencoded'},
     url:     'http://localhost/ia.php',
-    body:    "query=" + req.body['query']
+    body:    "query=" + req.body['query'] + "&demo=" + req.body['demo'] + "&endbl5=" + req.body['endbl5'] + "&endbl3=" + req.body['endbl3'] + "&sca=" + req.body['sca'] + "&scb=" + req.body['scb']
   },   
      function (error, response, body) {
         if (!error && response.statusCode == 200) {
