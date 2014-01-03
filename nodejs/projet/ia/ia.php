@@ -17,6 +17,7 @@ ini_set('error_reporting', E_ALL); // pour windows au cas où
 ** IA for Gomuku 2013
 */
 
+$absolute_val = 10000;
 
 
 class mmatch 
@@ -103,10 +104,8 @@ class IA
 			$i++;
 		}
 */
-		$lines = new IaValueLine($this->map);
-		$i = 0;/*
-		$this->log[] = "count value";
-		$this->log[] = print_r(array_count_values($this->map));*/
+		/*$lines = new IaValueLine($this->map);
+		$i = 0;
 		$this->log[] = "lines rawss";
 		while ($i < 19)
 		{
@@ -120,15 +119,22 @@ class IA
 			$this->log[] = $lines->concat_line($i);
 			$i++;
 		}
-		/* 
 		
-		IN PROGRESS
-		*/
+		
+		
+		
 		$this->log[] = "lines diag down up";
 		$this->log[] = $lines->concat_diagonal_down_up();
 		$this->log[] = "lines diag up down";
 		$this->log[] = $lines->concat_diagonal_up_down();
+		*/
 		
+		$iamachine = new IaMachine($this->map, $_POST);
+		$val = $iamachine->run_machine();
+		$this->log[] = "->IA a joué !!!!!!!";
+		$this->log[] = $val;
+		$this->log[] = $iamachine->get_log();
+		return ($val);
 		$x = rand (0, 18);
 		$y = rand (0, 18);
 		if ($this->map[$this->get_id($x, $y)] == 0)
@@ -247,7 +253,7 @@ class IaValueLine
 				{
 					$id = $this->get_id($x, $y);
 					$tab[$i] .= $this->map[$id];
-					 $x++;
+					$x++;
 					$y++;
 				}
 				$init_y--;
@@ -299,37 +305,69 @@ class IaPatern
 	public $turn;
 	public $double_trois;
 	public $five_breakable;
+	private $score_ia_init;
+	private $score_j_init;
 	public $score_ia;
 	public $score_j;
 	public $last_id; // dernier coup jouer
 	public $user; // 0 -> ia, 1 -> joueur
+	private $log;
+	private $arbitre;
 	
 	function __construct($tab, $post, $last_id, $user)
 	{
+		$this->arbitre = new Arbitre;
 		$this->last_id = $last_id;
 		$this->tab = $tab;
 		$this->value_tab = Array();
-		$this->value_tab['1']['0'] = 0; // 0 -> case vide
-		$this->value_tab['1']['1'] = 0; // 1 -> case j1
-		$this->value_tab['1']['2'] = 0; // 2 -> case j2
-		$this->value_tab['2']['0'] = 0; // 0 -> case vide
-		$this->value_tab['2']['1'] = 0; // 1 -> case j1
-		$this->value_tab['2']['2'] = 0; // 2 -> case j2
-		$this->value_tab['3']['0'] = 0; // 0 -> case vide
-		$this->value_tab['3']['1'] = 0; // 1 -> case j1
-		$this->value_tab['3']['2'] = 0; // 2 -> case j2
-		$this->value_tab['4']['0'] = 0; // 0 -> case vide
-		$this->value_tab['4']['1'] = 0; // 1 -> case j1
-		$this->value_tab['4']['2'] = 0; // 2 -> case j2
-		$this->value_tab['5']['0'] = 0; // 0 -> case vide
-		$this->value_tab['5']['1'] = 0; // 1 -> case j1
-		$this->value_tab['5']['2'] = 0; // 2 -> case j2
+		$this->value_tab[1][1]['lock'] = 0; // 1 -> case j1
+		$this->value_tab[1][2]['lock'] = 0; // 2 -> case j2
+		$this->value_tab[2][1]['lock'] = 0; // 1 -> case j1
+		$this->value_tab[2][2]['lock'] = 0; // 2 -> case j2
+		$this->value_tab[3][1]['lock'] = 0; // 1 -> case j1
+		$this->value_tab[3][2]['lock'] = 0; // 2 -> case j2
+		$this->value_tab[4][1]['lock'] = 0; // 1 -> case j1
+		$this->value_tab[4][2]['lock'] = 0; // 2 -> case j2
+		$this->value_tab[5][1]['lock'] = 0; // 1 -> case j1
+		$this->value_tab[5][2]['lock'] = 0; // 2 -> case j2
+		
+		$this->value_tab[1][0]['free'] = 0; // 0 -> case vide
+		$this->value_tab[1][1]['free'] = 0; // 1 -> case j1
+		$this->value_tab[1][2]['free'] = 0; // 2 -> case j2
+		$this->value_tab[2][0]['free'] = 0; // 0 -> case vide
+		$this->value_tab[2][1]['free'] = 0; // 1 -> case j1
+		$this->value_tab[2][2]['free'] = 0; // 2 -> case j2
+		$this->value_tab[3][0]['free'] = 0; // 0 -> case vide
+		$this->value_tab[3][1]['free'] = 0; // 1 -> case j1
+		$this->value_tab[3][2]['free'] = 0; // 2 -> case j2
+		$this->value_tab[4][0]['free'] = 0; // 0 -> case vide
+		$this->value_tab[4][1]['free'] = 0; // 1 -> case j1
+		$this->value_tab[4][2]['free'] = 0; // 2 -> case j2
+		$this->value_tab[5][0]['free'] = 0; // 0 -> case vide
+		$this->value_tab[5][1]['free'] = 0; // 1 -> case j1
+		$this->value_tab[5][2]['free'] = 0; // 2 -> case j2
+		
+
+		$this->value_tab[1][1]['condition'] = 0; // 1 -> case j1
+		$this->value_tab[1][2]['condition'] = 0; // 2 -> case j2
+		$this->value_tab[2][1]['condition'] = 0; // 1 -> case j1
+		$this->value_tab[2][2]['condition'] = 0; // 2 -> case j2
+		$this->value_tab[3][1]['condition'] = 0; // 1 -> case j1
+		$this->value_tab[3][2]['condition'] = 0; // 2 -> case j2
+		$this->value_tab[4][1]['condition'] = 0; // 1 -> case j1
+		$this->value_tab[4][2]['condition'] = 0; // 2 -> case j2
+		$this->value_tab[5][1]['condition'] = 0; // 1 -> case j1
+		$this->value_tab[5][2]['condition'] = 0; // 2 -> case j2
+		
+		
 		$tmp = (array_count_values($this->map));
 		$this->turn = 19 * 19 - $tmp[0];
 		$this->double_trois = $post['endbl3'];
 		$this->five_breakable = $pos['endbl5'];
 		$this->score_j = $post['sca'];
 		$this->score_ia = $post['scb'];
+		$this->score_j_init = $post['sca'];
+		$this->score_ia_init = $post['scb'];
 		$this->user = $user;
 	}
 	
@@ -374,11 +412,21 @@ class IaPatern
 		{
 			if ($i > 0 && ($i + 1) < $max && $tab[($i)]['player'] != 0)
 			{
-				if ($tab[($i - 1)]['played'] == true && $tab[($i + 1)]['player'] == $tab[($i - 1)]['player'])
+				$player = ($this->user == 1 ? $this->user : 2); 
+				if ($tab[($i - 1)]['played'] == true && $tab[($i + 1)]['player'] == $tab[($i - 1)]['player'] && $tab[($i)]['count'] == 2)
 					$score += 2;
-				if ($tab[($i + 1)]['played'] == true && $tab[($i - 1)]['player'] == $tab[($i - 1)]['player'])
+				if ($tab[($i + 1)]['played'] == true && $tab[($i - 1)]['player'] == $tab[($i + 1)]['player'] && $tab[($i)]['count'] == 2)
 					$score += 2;
+				if ($tab[($i - 1)]['player'] == $tab[($i + 1)]['player'] && $tab[($i - 1)]['player'] != 0)
+					$this->value_tab[($tab[($i)]['count'])][($player)]['lock'] += 1;
+				else if ($tab[($i - 1)]['player'] == 0  && $tab[($i + 1)]['player'] == 0)
+					$this->value_tab[($tab[($i)]['count'])][($player)]['free'] += 1;
+				else if ($tab[($i - 1)]['player'] == 0  XOR $tab[($i + 1)]['player'] == 0)
+					$this->value_tab[($tab[($i)]['count'])][($player)]['condition'] += 1;
+				
 			}
+			else if (!$tab[($i)]['player'])
+				$this->value_tab[($tab[($i)]['count'])][0]['free'] += 1;
 			$i++;
 		}
 		if ($this->user)
@@ -388,6 +436,66 @@ class IaPatern
 	}
 
 
+	public function run_token($token)
+	{
+		$this->value_parse_line($this->parse_line($token));
+	}
+
+	public function value_patterns()
+	{
+		$value = 0;
+		if ($this->score_j == 10)
+			$value -= $absolute_val;
+		if ($this->score_ia == 10)
+			$value += $absolute_val;
+		$value += ($this->score_ia > $this->score_ia_init ? ($this->score_ia * 0.1 * $absolute_val) : 0);
+		$value -= ($this->score_j > $this->score_j_init ? $this->score_j * 0.1 * $absolute_val : 0);
+		
+		$value -= $this->value_tab[1][1]['lock'] * 5 * ($this->score_ia / 10); // 1 -> case j1
+		$value += $this->value_tab[1][2]['lock'] * 5 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[2][1]['lock'] * 10 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[2][2]['lock'] * 10 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[3][1]['lock'] * 20 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[3][2]['lock'] * 20 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[4][1]['lock'] = 0; // 1 -> case j1
+		$value -= $this->value_tab[4][2]['lock'] = 0; // 2 -> case j2
+		$value += $this->value_tab[5][1]['lock'] * ($five_breackable == 1 ? 1000 : $absolute_val) * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[5][2]['lock'] * ($five_breackable == 1 ? 1000 : $absolute_val) * ($this->score_j / 10); // 2 -> case j2
+		
+		//$this->value_tab[1][0]['free'] * 0 * ($this->score_ia / 10); // 0 -> case vide
+		$value += $this->value_tab[1][1]['free'] * 5 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[1][2]['free'] * 5 * ($this->score_j / 10); // 2 -> case j2
+		//$this->value_tab[2][0]['free'] * 10 * ($this->score_ia / 10); // 0 -> case vide
+		$value += $this->value_tab[2][1]['free'] * 10 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[2][2]['free'] * 10 * ($this->score_j / 10); // 2 -> case j2
+		//$this->value_tab[3][0]['free'] = 0; // 0 -> case vide
+		$value += $this->value_tab[3][1]['free'] * 20 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[3][2]['free'] * 20 * ($this->score_j / 10); // 2 -> case j2
+		//$this->value_tab[4][0]['free'] = 0; // 0 -> case vide
+		$value += $this->value_tab[4][1]['free'] * 50 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[4][2]['free'] * 50 * ($this->score_j / 10); // 2 -> case j2
+		//$this->value_tab[5][0]['free'] = 0; // 0 -> case vide
+		$value += $this->value_tab[5][1]['free'] * ($five_breackable == 1 ? 3000 : $absolute_val) * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[5][2]['free'] * ($five_breackable == 1 ? 3000 : $absolute_val) * ($this->score_j / 10); // 2 -> case j2
+		
+
+		$value += $this->value_tab[1][1]['condition'] * 5 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[1][2]['condition'] * 5 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[2][1]['condition'] * 30 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[2][2]['condition'] * 30 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[3][1]['condition'] * 20 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[3][2]['condition'] * 20 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[4][1]['condition'] * 40 * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[4][2]['condition'] * 40 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[5][1]['condition'] * ($five_breackable == 1 ? 2000 : $absolute_val) * ($this->score_ia / 10); // 1 -> case j1
+		$value -= $this->value_tab[5][2]['condition'] * ($five_breackable == 1 ? 2000 : $absolute_val) * ($this->score_j / 10); // 2 -> case j2
+		return ($value);
+	}
+	
+	public function get_log()
+	{
+		print_r($this->log);
+	}
 }
 
 class IaMachine
@@ -403,14 +511,17 @@ class IaMachine
 	public $score_j;
 	public $last_id; // dernier coup jouer
 	public $user; // 0 -> ia, 1 -> joueur
+	public $post;
+	private $log;
 	
-	function __construct($map, $post, $user)
+	function __construct($map, $post)
 	{
+		$this->post = $post;
 		$this->map = $map;
 		$tmp = (array_count_values($this->map));
 		$this->turn = 19 * 19 - $tmp[0];
 		$this->double_trois = $post['endbl3'];
-		$this->five_breakable = $pos['endbl5'];
+		$this->five_breakable = $post['endbl5'];
 		$this->score_j = $post['sca'];
 		$this->score_ia = $post['scb'];
 		$this->user = 0;
@@ -423,20 +534,105 @@ class IaMachine
 		$y = rand (0, 18);
 		if ($this->map[$this->get_id($x, $y)] == 0)
 		{
-			//$this->log[] = "Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
+			$this->log[] = "Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
 			return ($x. ';' . $y);
 		}
 		else
 			return ($this->make_rdm());
 	}
 	
+		
+	private function get_pos($i) {
+		if ($i <= 0) {
+			$x = 0;
+			$y = 0;
+		}
+		else {
+			$y = $i % 19;
+			$x = round($i / 19);
+		}
+		$tab = Array();
+		$tab['x'] = $x;
+		$tab['y'] = $y;
+		return ($tab);
+	}
+	
 	public function run_machine()
 	{
 		if ($this->turn == 1)
 			return ($this->make_rdm());
-		return ($this->make_rdm());
+	
+		$i = 0;
+		$tab = Array();
+		while ($i < 361)
+		{
+			$tmp = $this->map;
+			if (!$tmp[$i])
+			{
+				$tmp[$i] = 9; // 9 -> just pose
+				$ia_pt = new IaPatern($tmp, $this->post, $i, $this->user);
+				$lines = new IaValueLine($tmp);
+				$j = 0;
+				while ($j < 19)
+				{
+					$ia_pt->run_token($lines->concat_raw($j));
+					$j++;
+				}
+				$j = 0;
+
+				while ($j < 19)
+				{
+					$ia_pt->run_token($lines->concat_line($j));
+					$j++;
+				}
+		
+		
+				$tmp_tab = $lines->concat_diagonal_down_up();
+				foreach ($tmp_tab as $tabs)
+				{
+					$ia_pt->run_token($tabs);
+				}
+				$tmp_tab = $lines->concat_diagonal_up_down();
+				foreach ($tmp_tab as $tabs)
+				{
+					$ia_pt->run_token($tabs);
+				}
+				$tab[$i] = $ia_pt->value_patterns();
+			}
+			else
+				$tab[$i] = 'x';
+			$i++;
+		}
+		$tmps = array_count_values($tab);
+		$i = 0;
+		if (!$this->user)
+			rsort($tmps);
+		foreach ($tmps as $key => $value)
+		{
+			if (! isset($good) && $key != 'x')
+				{
+					$good = $key;
+				}
+			$i++;
+		}
+		$final = array_keys($tab, $good);
+		$id = rand(0, count($final));
+		$tabs = $this->get_pos($id);
+		$x = $tabs['x'];
+		$y = $tabs['y'];
+		$this->log[] = "IA Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
+		return ($x. ';' . $y);
 	}
 
+	private function get_id ($x, $y)
+	{
+		return (($x * 19 + $y < 18 * 18 ? $x * 19 + $y : 18 * 18 ));
+	}
+	
+	public function get_log()
+	{
+		print_r($this->log);
+	}
 	
 }
 
