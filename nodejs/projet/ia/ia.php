@@ -17,7 +17,7 @@ ini_set('error_reporting', E_ALL); // pour windows au cas où
 ** IA for Gomuku 2013
 */
 
-$absolute_val = 10000;
+
 
 
 class mmatch 
@@ -313,10 +313,12 @@ class IaPatern
 	public $user; // 0 -> ia, 1 -> joueur
 	private $log;
 	private $arbitre;
+	private $absolute_val;
 	
 	function __construct($tab, $post, $last_id, $user)
 	{
 		$this->arbitre = new Arbitre;
+		$this->absolute_val = 10000;
 		$this->last_id = $last_id;
 		$this->tab = $tab;
 		$this->value_tab = Array();
@@ -360,10 +362,10 @@ class IaPatern
 		$this->value_tab[5][2]['condition'] = 0; // 2 -> case j2
 		
 		
-		$tmp = (array_count_values($this->map));
+		$tmp = (array_count_values($this->tab));
 		$this->turn = 19 * 19 - $tmp[0];
 		$this->double_trois = $post['endbl3'];
-		$this->five_breakable = $pos['endbl5'];
+		$this->five_breakable = $post['endbl5'];
 		$this->score_j = $post['sca'];
 		$this->score_ia = $post['scb'];
 		$this->score_j_init = $post['sca'];
@@ -377,29 +379,47 @@ class IaPatern
 		$tab = Array();
 		$i = 0;
 		$count = 0;
-		$max = count($token);
+		while (isset($token[$i]))
+			$i++;
+		$max = $i;
+		$i = 0;
 		$j = 0;
-		$player = 0;
-		$is = false;
+		$player = ($token[$i] == 9 ? ($this->user == 0 ? 2 : 1) : $token[$i]);
+		$is = 0;
+		$this->log[] = "USE TOKEN";
 		while ($i < $max)
 		{
-			if (($player == $token[$i]) || ($player == 9 && $token[$i] == 9))
+			$tmp = ($token[$i] == 9 ? ($this->user == 0 ? 2 : 1) : $token[$i]);
+			$this->log[] = $tmp . " -- count : " . $count . " - $i / $max";
+			
+			if ($player == $tmp)
 			{
-				$is = ($token[$i] == 9 ? true : $is);
+				$is = ($token[$i] == 9 ? 1 : $is);
 				$count++;
 			}
 			else
 			{
+				$tab[$j] = Array();
 				$tab[$j]['count'] = $count;
 				$tab[$j]['played'] = $is;
-				$tab[$j++]['player'] = $player;
-				
-				$player = $token[$i];
-				$count = 0;
-				$is = false;
+				$tab[$j]['player'] = $player;
+				$j++;
+				$player = $tmp;
+				$count = 1;
+				$is = 0;
+				$this->log[] = "Ennds" . $tmp . " -- count : " . $count . " - $i / $max";
 			}
 			$i++;
 		}
+		$tab[$j]['count'] = $count;
+		$tab[$j]['played'] = $is;
+		$tab[$j]['player'] = $player;
+		$this->log[] = "parse token";
+		$this->log[] = $token;
+		
+		$this->log[] = "parse Line";
+		$this->log[] = $tab;
+		$this->log[] = "-----";
 		return ($tab);
 	}
 	
@@ -410,29 +430,39 @@ class IaPatern
 		$score = 0;
 		while ($i < $max)
 		{
+			$lens = ($tab[($i)]['count'] > 5 ? 5 : $tab[($i)]['count']);
+			$this->log[] = "LENS $lens  tab : " . $tab[$i]['player'] . " n° $i max: $max";
 			if ($i > 0 && ($i + 1) < $max && $tab[($i)]['player'] != 0)
 			{
+				echo "TATA";
 				$player = ($this->user == 1 ? $this->user : 2); 
-				if ($tab[($i - 1)]['played'] == true && $tab[($i + 1)]['player'] == $tab[($i - 1)]['player'] && $tab[($i)]['count'] == 2)
+				if ($tab[($i - 1)]['played'] == 1 && $tab[($i + 1)]['player'] == $tab[($i - 1)]['player'] && $tab[($i)]['count'] == 2)
 					$score += 2;
-				if ($tab[($i + 1)]['played'] == true && $tab[($i - 1)]['player'] == $tab[($i + 1)]['player'] && $tab[($i)]['count'] == 2)
+				if ($tab[($i + 1)]['played'] == 1 && $tab[($i - 1)]['player'] == $tab[($i + 1)]['player'] && $tab[($i)]['count'] == 2)
 					$score += 2;
 				if ($tab[($i - 1)]['player'] == $tab[($i + 1)]['player'] && $tab[($i - 1)]['player'] != 0)
-					$this->value_tab[($tab[($i)]['count'])][($player)]['lock'] += 1;
-				else if ($tab[($i - 1)]['player'] == 0  && $tab[($i + 1)]['player'] == 0)
-					$this->value_tab[($tab[($i)]['count'])][($player)]['free'] += 1;
-				else if ($tab[($i - 1)]['player'] == 0  XOR $tab[($i + 1)]['player'] == 0)
-					$this->value_tab[($tab[($i)]['count'])][($player)]['condition'] += 1;
+					$this->value_tab[($lens)][($player)]['lock'] += 1;
+				else if ($tab[($i - 1)]['player'] == 0 && $tab[($i + 1)]['player'] == 0)
+					$this->value_tab[($lens)][($player)]['free'] += 1;
+				else if ($tab[($i - 1)]['player'] == 0 XOR $tab[($i + 1)]['player'] == 0)
+					$this->value_tab[($lens)][($player)]['condition'] += 1;
 				
 			}
-			else if (!$tab[($i)]['player'])
-				$this->value_tab[($tab[($i)]['count'])][0]['free'] += 1;
+			else if (!$tab[($i)]['player'] && $lens > 0)
+			{
+				echo "TARUC";
+				$this->value_tab[($lens)][0]['free'] += 1;
+			}
+			else
+				echo "NULLLLLS";
 			$i++;
 		}
 		if ($this->user)
 			$this->score_j += $score;
 		else
 			$this->score_ia += $score;
+		/*$this->log[] = "MAJ value_tab " . print_r($tab);	
+		$this->log[] = print_r($this->value_tab);*/
 	}
 
 
@@ -448,47 +478,50 @@ class IaPatern
 			$value -= $absolute_val;
 		if ($this->score_ia == 10)
 			$value += $absolute_val;
-		$value += ($this->score_ia > $this->score_ia_init ? ($this->score_ia * 0.1 * $absolute_val) : 0);
-		$value -= ($this->score_j > $this->score_j_init ? $this->score_j * 0.1 * $absolute_val : 0);
+		$value += ($this->score_ia > $this->score_ia_init ? ($this->score_ia  * $absolute_val) : 0);
+		$value -= ($this->score_j > $this->score_j_init ? $this->score_j * $absolute_val : 0);
 		
-		$value -= $this->value_tab[1][1]['lock'] * 5 * ($this->score_ia / 10); // 1 -> case j1
-		$value += $this->value_tab[1][2]['lock'] * 5 * ($this->score_j / 10); // 2 -> case j2
-		$value += $this->value_tab[2][1]['lock'] * 10 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[2][2]['lock'] * 10 * ($this->score_j / 10); // 2 -> case j2
-		$value += $this->value_tab[3][1]['lock'] * 20 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['lock'] * 20 * ($this->score_j / 10); // 2 -> case j2
+		$value -= $this->value_tab[1][1]['lock'] * 5 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value += $this->value_tab[1][2]['lock'] * 5 * ($this->score_j * 0.1); // 2 -> case j2
+		$value += $this->value_tab[2][1]['lock'] * 10 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[2][2]['lock'] * 10 * ($this->score_j * 0.1); // 2 -> case j2
+		$value += $this->value_tab[3][1]['lock'] * 20 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[3][2]['lock'] * 20 * ($this->score_j * 0.1); // 2 -> case j2
 		$value += $this->value_tab[4][1]['lock'] = 0; // 1 -> case j1
 		$value -= $this->value_tab[4][2]['lock'] = 0; // 2 -> case j2
-		$value += $this->value_tab[5][1]['lock'] * ($five_breackable == 1 ? 1000 : $absolute_val) * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[5][2]['lock'] * ($five_breackable == 1 ? 1000 : $absolute_val) * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[5][1]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[5][2]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * ($this->score_j * 0.1); // 2 -> case j2
 		
 		//$this->value_tab[1][0]['free'] * 0 * ($this->score_ia / 10); // 0 -> case vide
-		$value += $this->value_tab[1][1]['free'] * 5 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[1][2]['free'] * 5 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[1][1]['free'] * 5 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[1][2]['free'] * 5 * ($this->score_j * 0.1); // 2 -> case j2
 		//$this->value_tab[2][0]['free'] * 10 * ($this->score_ia / 10); // 0 -> case vide
-		$value += $this->value_tab[2][1]['free'] * 10 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[2][2]['free'] * 10 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[2][1]['free'] * 10 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[2][2]['free'] * 10 * ($this->score_j * 0.1); // 2 -> case j2
 		//$this->value_tab[3][0]['free'] = 0; // 0 -> case vide
-		$value += $this->value_tab[3][1]['free'] * 20 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['free'] * 20 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[3][1]['free'] * 20 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[3][2]['free'] * 20 * ($this->score_j * 0.1); // 2 -> case j2
 		//$this->value_tab[4][0]['free'] = 0; // 0 -> case vide
-		$value += $this->value_tab[4][1]['free'] * 50 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[4][2]['free'] * 50 * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[4][1]['free'] * 50 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[4][2]['free'] * 50 * ($this->score_j * 0.1); // 2 -> case j2
 		//$this->value_tab[5][0]['free'] = 0; // 0 -> case vide
-		$value += $this->value_tab[5][1]['free'] * ($five_breackable == 1 ? 3000 : $absolute_val) * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[5][2]['free'] * ($five_breackable == 1 ? 3000 : $absolute_val) * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[5][1]['free'] * ($this->five_breakable == 1 ? 3000 : $this->absolute_val) * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[5][2]['free'] * ($this->five_breakable == 1 ? 3000 : $this->absolute_val) * ($this->score_j * 0.1); // 2 -> case j2
 		
 
-		$value += $this->value_tab[1][1]['condition'] * 5 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[1][2]['condition'] * 5 * ($this->score_j / 10); // 2 -> case j2
-		$value += $this->value_tab[2][1]['condition'] * 30 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[2][2]['condition'] * 30 * ($this->score_j / 10); // 2 -> case j2
-		$value += $this->value_tab[3][1]['condition'] * 20 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['condition'] * 20 * ($this->score_j / 10); // 2 -> case j2
-		$value += $this->value_tab[4][1]['condition'] * 40 * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[4][2]['condition'] * 40 * ($this->score_j / 10); // 2 -> case j2
-		$value += $this->value_tab[5][1]['condition'] * ($five_breackable == 1 ? 2000 : $absolute_val) * ($this->score_ia / 10); // 1 -> case j1
-		$value -= $this->value_tab[5][2]['condition'] * ($five_breackable == 1 ? 2000 : $absolute_val) * ($this->score_j / 10); // 2 -> case j2
+		$value += $this->value_tab[1][1]['condition'] * 9 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[1][2]['condition'] * 7 * ($this->score_j * 0.1); // 2 -> case j2
+		$value += $this->value_tab[2][1]['condition'] * 30 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[2][2]['condition'] * 30 * ($this->score_j * 0.1); // 2 -> case j2
+		$value += $this->value_tab[3][1]['condition'] * 20 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[3][2]['condition'] * 20 * ($this->score_j * 0.1); // 2 -> case j2
+		$value += $this->value_tab[4][1]['condition'] * 40 * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[4][2]['condition'] * 40 * ($this->score_j * 0.1); // 2 -> case j2
+		$value += $this->value_tab[5][1]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * ($this->score_ia * 0.1); // 1 -> case j1
+		$value -= $this->value_tab[5][2]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * ($this->score_j * 0.1); // 2 -> case j2
+		$value = ($value == 0 ? 1 : $value);
+		$this->log[] = "TAB VALUE";
+		$this->log[] = print_r($this->value_tab);
 		return ($value);
 	}
 	
@@ -526,6 +559,7 @@ class IaMachine
 		$this->score_ia = $post['scb'];
 		$this->user = 0;
 		$this->deep_lvl = 1;
+		
 	}
 	
 	private function make_rdm()
@@ -559,17 +593,20 @@ class IaMachine
 	
 	public function run_machine()
 	{
-		if ($this->turn == 1)
-			return ($this->make_rdm());
+		//if ($this->turn == 1)
+		//	return ($this->make_rdm());
 	
 		$i = 0;
 		$tab = Array();
-		while ($i < 361)
-		{
+		//while ($i < 361)
+		//{
+		$this->log[] = "map tmp";
+		
 			$tmp = $this->map;
 			if (!$tmp[$i])
 			{
 				$tmp[$i] = 9; // 9 -> just pose
+				//$this->log[] = print_r($tmp);
 				$ia_pt = new IaPatern($tmp, $this->post, $i, $this->user);
 				$lines = new IaValueLine($tmp);
 				$j = 0;
@@ -598,11 +635,13 @@ class IaMachine
 					$ia_pt->run_token($tabs);
 				}
 				$tab[$i] = $ia_pt->value_patterns();
+				$this->log[] = $ia_pt->get_log();
 			}
-			else
-				$tab[$i] = 'x';
+			//else
+			//	$tab[$i] = 'x';
 			$i++;
-		}
+		//}
+		//$this->log[] = print_r($tab);
 		$tmps = array_count_values($tab);
 		$i = 0;
 		if (!$this->user)
