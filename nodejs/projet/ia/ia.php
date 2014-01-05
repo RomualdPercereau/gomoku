@@ -399,6 +399,7 @@ class IaPatern
 		$tab[$j]['count'] = $count;
 		$tab[$j]['played'] = $is;
 		$tab[$j]['player'] = $player;
+		//echo "tokens -> $token \n";
 		/*$this->log[] = "parse token";
 		$this->log[] = $token;
 		
@@ -424,11 +425,12 @@ class IaPatern
 				{
 					//$this->log[] = "NEWS" . $player;
 					//$this->log[] = "$lens - $player " . (($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'lock' : 'condition') ." stop";
-					$this->value_tab[($lens)][($player)][(($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'lock' : 'condition')] += 1;
+					$this->value_tab[($lens)][($player)][(($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'condition' : 'free')] += 1;
 				}
 				if ($i > 0 && ($i + 1) < $max)
 				{
 					//$this->log[] = "TATA" . $player;
+					//echo "-1 " . $tab[($i + 1)]['player'] . " et +1 " . $tab[($i - 1)]['player'] . "\n\r";
 					if ($tab[($i - 1)]['played'] == 1 && $tab[($i + 1)]['player'] == $tab[($i - 1)]['player'] && $tab[($i)]['count'] == 2)
 						$score += 2;
 					if ($tab[($i + 1)]['played'] == 1 && $tab[($i - 1)]['player'] == $tab[($i + 1)]['player'] && $tab[($i)]['count'] == 2)
@@ -467,6 +469,7 @@ class IaPatern
 	public function value_patterns()
 	{
 		$value = 0;
+		echo "Score : $this->score_j - $this->score_ia\r\n";
 		if ($this->score_j == 10)
 			$value -= $absolute_val;
 		if ($this->score_ia == 10)
