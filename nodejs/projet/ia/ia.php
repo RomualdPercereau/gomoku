@@ -169,10 +169,22 @@ $ia->setMap($_POST['query']);
 
 
 /* Réponse */
+/*
 echo $ia->getresult();
 
 
 $ia->getLog();
+*/
+
+
+$result =  $ia->getresult();
+
+
+$ia->getLog();
+
+$tmp  = ob_get_contents();
+echo $result . $tmp;
+
 
 class IaValueLine
 {
