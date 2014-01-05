@@ -591,12 +591,14 @@ class IaMachine
 		//$used = (!$this->user ? - 1000000: 1000000);
 		$i = 0;
 		$tab = Array();
-		while ($i < 361)
+		$res = Array();
+		$maxs = 0;
+		while ($i < (19*18))
 		{
 		//$this->log[] = "map tmp";
 		
 			$tmp = $this->map;
-			if (!$tmp[$i])
+			if ($tmp[$i] == 0)
 			{
 				$tmp[$i] = 9; // 9 -> just pose
 				//$this->log[] = print_r($tmp);
@@ -615,8 +617,6 @@ class IaMachine
 					$ia_pt->run_token($lines->concat_line($j));
 					$j++;
 				}
-		
-		
 				$tmp_tab = $lines->concat_diagonal_down_up();
 				foreach ($tmp_tab as $tabs)
 				{
@@ -628,6 +628,15 @@ class IaMachine
 					$ia_pt->run_token($tabs);
 				}
 				$tmp = intval($ia_pt->value_patterns());
+				if ($maxs < $tmp)
+					{
+						$maxs = $tmp;
+						unset($res);
+						$res = array();
+						$res[] = $i;
+					}
+				if ($maxs == $tmp)
+					$res[] = $i;
 				if ($tmp != 0)
 					$tab[$i] = $tmp;
 				//$this->log[] = $ia_pt->get_log();
@@ -637,11 +646,16 @@ class IaMachine
 			//$this->log[] = "Error" .gettype($tab[$i]);
 			$i++;
 		}
+		echo "tata max[$maxs]";
+		print_r($res);
 		$this->log[] = print_r($tab, true);
+		echo "the_value_tab";
 		print_r($tab);
-		$tmps = array_count_values($tab);
-		$i = 0;
-		if (!$this->user)
+		$final = $res;
+		
+		//$tmps = array_count_values($tab);
+		//$i = 0;
+		/*if (!$this->user)
 			rsort($tmps);
 		$final = array();
 		foreach ($tmps as $key => $value)
@@ -650,12 +664,20 @@ class IaMachine
 			if (! isset($good))
 				{
 					//$good = $key;
+					$good = 5;
+					echo "Keys-$key-";
 					$final = array_keys($tab, $key);
+					echo "finNales";
+		print_r($final);
 				}
 			$i++;
-		}
+		}*/
 		//$final = array_keys($tab, $good);
-		$id = rand(0, count($final));
+		
+		$this->log[] = print_r($final, true);
+		
+		$id = $final[rand(0, count($final))];
+		echo "ID:$id";
 		$tabs = $this->get_pos($id);
 		$x = $tabs['x'];
 		$y = $tabs['y'];
