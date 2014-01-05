@@ -77,7 +77,7 @@ class IA
 		}
 		else {
 			$y = $i % 19;
-			$x = round($i / 19);
+			$x = floor($i / 19);
 		}
 		$tab = Array();
 		$tab['x'] = $x;
@@ -180,7 +180,7 @@ class IaValueLine
 		}
 		else {
 			$y = $i % 19;
-			$x = round($i / 19);
+			$x = floor($i / 19);
 		}
 		$tab = Array();
 		$tab['x'] = $x;
@@ -469,7 +469,7 @@ class IaPatern
 	public function value_patterns()
 	{
 		$value = 0;
-		echo "Score : $this->score_j - $this->score_ia\r\n";
+		//echo "Score : $this->score_j - $this->score_ia\r\n";
 		if ($this->score_j == 10)
 			$value -= $absolute_val;
 		if ($this->score_ia == 10)
@@ -579,7 +579,7 @@ class IaMachine
 		}
 		else {
 			$y = $i % 19;
-			$x = round($i / 19);
+			$x = floor($i / 19);
 		}
 		$tab = Array();
 		$tab['x'] = $x;
@@ -734,7 +734,7 @@ class Arbitre
 		}
 		else {
 			$y = $i % 19;
-			$x = round($i / 19);
+			$x = floor($i / 19);
 		}
 		$tab = Array();
 		$tab['x'] = $x;
