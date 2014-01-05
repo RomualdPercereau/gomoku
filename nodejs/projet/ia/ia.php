@@ -475,13 +475,13 @@ class IaPatern
 		$value -= ($this->score_j > $this->score_j_init ? ((($this->score_j * 0.1) + 1) * $absolute_val) : 0);
 		
 		$value -= $this->value_tab[1][1]['lock'] * 5 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value += $this->value_tab[1][2]['lock'] * 5 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value += $this->value_tab[1][2]['lock'] * 3 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[2][1]['lock'] * 10 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[2][2]['lock'] * 10 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[2][2]['lock'] * 8 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[3][1]['lock'] * 20 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['lock'] * 20 * (($this->score_j * 0.1) + 1); // 2 -> case j2
-		$value += $this->value_tab[4][1]['lock'] = 0; // 1 -> case j1
-		$value -= $this->value_tab[4][2]['lock'] = 0; // 2 -> case j2
+		$value -= $this->value_tab[3][2]['lock'] * 18 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		//$value += $this->value_tab[4][1]['lock'] = 0; // 1 -> case j1
+		//$value -= $this->value_tab[4][2]['lock'] = 0; // 2 -> case j2
 		$value += $this->value_tab[5][1]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[5][2]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2*/
 		
@@ -505,11 +505,11 @@ class IaPatern
 		$value += $this->value_tab[1][1]['condition'] * 5 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[1][2]['condition'] * 4 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[2][1]['condition'] * 30 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[2][2]['condition'] * 30 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[2][2]['condition'] * 28 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[3][1]['condition'] * 20 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['condition'] * 20 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[3][2]['condition'] * 18 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[4][1]['condition'] * 40 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[4][2]['condition'] * 40 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[4][2]['condition'] * 38 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[5][1]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[5][2]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$value = ($value == 0 ? 1 : $value);
