@@ -461,6 +461,7 @@ class IaPatern
 					//$this->log[] = "TITI";
 					$this->value_tab[($lens)][0]['free'] += 1;
 				}
+				
 			}
 			$i++;
 		}
@@ -485,8 +486,8 @@ class IaPatern
 			$value -= $absolute_val;
 		if ($this->score_ia == 10)
 			$value += $absolute_val;
-		$value += ($this->score_ia > $this->score_ia_init ? ($this->score_ia  * $absolute_val) : 0);
-		$value -= ($this->score_j > $this->score_j_init ? $this->score_j * $absolute_val : 0);
+		$value += ($this->score_ia > $this->score_ia_init ? ((($this->score_ia * 0.1) + 1)  * $absolute_val) : 0);
+		$value -= ($this->score_j > $this->score_j_init ? ((($this->score_j * 0.1) + 1) * $absolute_val) : 0);
 		
 		$value -= $this->value_tab[1][1]['lock'] * 5 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value += $this->value_tab[1][2]['lock'] * 5 * (($this->score_j * 0.1) + 1); // 2 -> case j2
@@ -602,7 +603,7 @@ class IaMachine
 	{
 		//if ($this->turn == 1)
 		//	return ($this->make_rdm());
-	
+		//$used = (!$this->user ? - 1000000: 1000000);
 		$i = 0;
 		$tab = Array();
 		while ($i < 361)
@@ -641,17 +642,19 @@ class IaMachine
 				{
 					$ia_pt->run_token($tabs);
 				}
-				$tmp = $ia_pt->value_patterns();
+				$tmp = intval($ia_pt->value_patterns());
 				if ($tmp != 0)
 					$tab[$i] = $tmp;
-				$this->log[] = $ia_pt->get_log();
+				//$this->log[] = $ia_pt->get_log();
 			}
 			//else
-			//	$tab[$i] = 'x';
+			//	$tab[$i] = $used;
+			//$this->log[] = "Error" .gettype($tab[$i]);
 			$i++;
 		}
 		
 		$this->log[] = print_r($tab);
+		$this->log[] ="AHAHAHA";
 		$tmps = array_count_values($tab);
 		$i = 0;
 		if (!$this->user)
@@ -659,8 +662,8 @@ class IaMachine
 		$final = array();
 		foreach ($tmps as $key => $value)
 		{
-			$this->log[] = "goods " . $value;
-			if (! isset($good) && $key != 'x')
+			//$this->log[] = "goods " . $value;
+			if (! isset($good))
 				{
 					//$good = $key;
 					$final = array_keys($tab, $key);
