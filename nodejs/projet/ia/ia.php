@@ -680,7 +680,7 @@ class IaMachine
 		
 		$this->log[] = print_r($final, true);
 		
-		$id = $final[rand(0, count($final))];
+		$id = $final[rand(0, count($final) - 1)];
 		echo "ID:$id";
 		$tabs = $this->get_pos($id);
 		$x = $tabs['x'];
