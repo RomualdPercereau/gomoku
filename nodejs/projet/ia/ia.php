@@ -17,7 +17,7 @@ ini_set('error_reporting', E_ALL); // pour windows au cas où
 ** IA for Gomuku 2013
 */
 
-
+ob_start();
 
 
 class mmatch 
@@ -131,9 +131,10 @@ class IA
 		
 		$iamachine = new IaMachine($this->map, $_POST);
 		$val = $iamachine->run_machine();
-		$this->log[] = "->IA a joué !!!!!!!";
+		
 		$this->log[] = $val;
-		$this->log[] = $iamachine->get_log();
+		$this->log[] = "->IA a joué !!!!!!!";
+		$this->log[] = print_r($iamachine->get_log(), true);
 		return ($val);
 		$x = rand (0, 18);
 		$y = rand (0, 18);
@@ -535,7 +536,7 @@ class IaPatern
 	
 	public function get_log()
 	{
-		print_r($this->log);
+		print_r($this->log, true);
 	}
 }
 
@@ -652,9 +653,7 @@ class IaMachine
 			//$this->log[] = "Error" .gettype($tab[$i]);
 			$i++;
 		}
-		
-		$this->log[] = print_r($tab);
-		$this->log[] ="AHAHAHA";
+		$this->log[] = print_r($tab, true);
 		$tmps = array_count_values($tab);
 		$i = 0;
 		if (!$this->user)
@@ -686,7 +685,7 @@ class IaMachine
 	
 	public function get_log()
 	{
-		print_r($this->log);
+		print_r($this->log, true);
 	}
 	
 }
@@ -845,7 +844,7 @@ class Arbitre
 
 	public function getLog()
 	{
-		print_r($this->log);
+		print_r($this->log, true);
 	}
 }
 
