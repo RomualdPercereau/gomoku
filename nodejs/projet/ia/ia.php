@@ -156,34 +156,6 @@ class IA
 
 }
 
-$ia = new IA;
-
-/* Variables de définition pour savoir qui joue */
-$ia->colorIA = 2;
-$ia->colorPLAY2 = 2;
-$ia->empty = 0;
-$ia->setMap($_POST['query']);
-
-
-// echo $_POST['query'];
-
-
-/* Réponse */
-/*
-echo $ia->getresult();
-
-
-$ia->getLog();
-*/
-
-
-$result =  $ia->getresult();
-
-
-$ia->getLog();
-
-$tmp  = ob_get_contents();
-echo $result . $tmp;
 
 
 class IaValueLine
@@ -666,6 +638,7 @@ class IaMachine
 			$i++;
 		}
 		$this->log[] = print_r($tab, true);
+		print_r($tab);
 		$tmps = array_count_values($tab);
 		$i = 0;
 		if (!$this->user)
@@ -1035,5 +1008,36 @@ function check_patterns ($tab, $id_player)
 	}
 	return (true);
 }
+
+
+$ia = new IA;
+
+/* Variables de définition pour savoir qui joue */
+$ia->colorIA = 2;
+$ia->colorPLAY2 = 2;
+$ia->empty = 0;
+$ia->setMap($_POST['query']);
+
+
+// echo $_POST['query'];
+
+
+/* Réponse */
+/*
+echo $ia->getresult();
+
+
+$ia->getLog();
+*/
+
+
+$result =  $ia->getresult();
+
+
+echo $ia->getLog();
+
+$tmp  = ob_get_clean();
+echo $result . "debug : " .  $tmp;
+
 
 ?>
