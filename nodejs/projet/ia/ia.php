@@ -637,7 +637,7 @@ class IaMachine
 						$maxs = $tmp;
 						unset($res);
 						$res = array();
-						$res[] = $i;
+						//$res[] = $i;
 					}
 				if ($maxs == $tmp)
 					$res[] = $i;
