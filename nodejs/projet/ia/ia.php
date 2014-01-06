@@ -43,27 +43,19 @@ class IA
 	public $colorPLAY2;
 	public $empty;
 	private $log;
-	private $arbitre;
 	const  ERROR = 1;
-
 
 	function __construct()
 	{
-		$this->arbitre = new Arbitre;
 	}
 
 	public function setMap($map)
 	{
-		$this->log[] = "Variables reçues";
-		$this->log[] = print_r($_POST, true);
-
 		if (!$map || $map == "")
 			$this->log[] = "No data";
 		$this->map = json_decode(stripslashes($map));
 		if ($this->map === NULL)
 			$this->log[] = "Can't decrypt map";
-		//$this->log[] = $map;
-		//$this->log[] = $this->map;
 	}
 
 	private function get_id ($x, $y)
@@ -88,48 +80,6 @@ class IA
 
 	public function getresult()
 	{
-		$i = 0;
-		/*while ($i < 18 * 19) {
-				//$this->log[] = $this->colorIA;
-
-			//$this->log[] = $this->get_pos($this->map, $i)['x'] . ';' . $this->get_pos($this->map, $i)['y'];
-			if ($this->arbitre->check_5_h($this->map, $i, $this->colorIA) != 0) {
-				$this->log[] = "prout";
-				if ($this->map[$i] == 0) {
-					//$this->log[] = "Pose en  $x;$y " . $this->map[$i];
-					$this->log[] = "DOUBLE prout";
-					$this->log[] = $this->get_pos($this->map, $i)['x'] . ';' . $this->get_pos($this->map, $i)['y'];
-					return ($this->get_pos($this->map, $i)['x'] . ';' . $this->get_pos($this->map, $i)['y']);
-				}
-			}
-			$i++;
-		}
-*/
-		/*$lines = new IaValueLine($this->map);
-		$i = 0;
-		$this->log[] = "lines rawss";
-		while ($i < 19)
-		{
-			$this->log[] = $lines->concat_raw($i);
-			$i++;
-		}
-		$i = 0;
-		$this->log[] = "lines lines";
-		while ($i < 19)
-		{
-			$this->log[] = $lines->concat_line($i);
-			$i++;
-		}
-		
-		
-		
-		
-		$this->log[] = "lines diag down up";
-		$this->log[] = $lines->concat_diagonal_down_up();
-		$this->log[] = "lines diag up down";
-		$this->log[] = $lines->concat_diagonal_up_down();
-		*/
-		
 		$iamachine = new IaMachine($this->map, $_POST);
 		$val = $iamachine->run_machine();
 		
@@ -137,26 +87,13 @@ class IA
 		$this->log[] = "->IA a joué !!!!!!!";
 		$this->log[] = print_r($iamachine->get_log(), true);
 		return ($val);
-		$x = rand (0, 18);
-		$y = rand (0, 18);
-		if ($this->map[$this->get_id($x, $y)] == 0)
-		{
-			$this->log[] = "Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
-			return ($x. ';' . $y);
-		}
-		else
-			return ($this->getresult());
 	}
 
 	public function getLog()
 	{
-		$this->log[] = "Je suis un champignon grillé";
 		print_r($this->log);
-		print_r($this->arbitre->getLog());
 	}
-
 }
-
 
 
 class IaValueLine
@@ -174,12 +111,15 @@ class IaValueLine
 		return (($x * 19 + $y < 19 * 19 ? $x * 19 + $y : 19 * 19 ));
 	}
 
-	private function get_pos($map, $i) {
-		if ($i <= 0) {
+	private function get_pos($map, $i)
+	{
+		if ($i <= 0) 
+		{
 			$x = 0;
 			$y = 0;
 		}
-		else {
+		else
+		{
 			$y = $i % 19;
 			$x = floor($i / 19);
 		}
@@ -191,7 +131,6 @@ class IaValueLine
 	
 	public function concat_raw($i)
 	{
-
 		$x = 0;
 		$y = $i;
 		$res = "";
@@ -212,30 +151,25 @@ class IaValueLine
 		while ($y < 19)
 		{
 			$id = $this->get_id($x, $y);
-			//echo "$i [$x;$y]->$id" . $this->map[$id] . "\n";
 			$res .= $this->map[$id];
 			$y++;
 		}
 		return ($res);
 	}
-	
-	/*
-	haut droite -> bas gauche
-	*/
+
 	public function concat_diagonal_down_up()
 	{
 		$init_x = 0;
-		$init_y = 19 - 5;
+		$init_y = 15;
 		$i = 0;
 		$tab = Array();
-		while ($init_x < (19 - 5))
+		while ($init_x < (15))
 		{
 			while ($init_y > -1)
 			{
 				$x = $init_x;
 				$y = $init_y;
 				$tab[$i] = "";
-				// while (($y > -1 && $y < 19) && ($x > -1 && $x < 19))
 				while ($x < 19 && $y < 19)
 				{
 					$id = $this->get_id($x, $y);
@@ -251,14 +185,14 @@ class IaValueLine
 		}
 		return ($tab);
 	}
+
 	/*
 	bas gauche -> haut droit
-	
 	*/
 	public function concat_diagonal_up_down()
 	{
 		$init_x = 0;
-		$init_y = 4;
+		$init_y = 2;
 		$i = 0;
 		$tab = Array();
 		while ($init_x < 5)
@@ -269,7 +203,6 @@ class IaValueLine
 				$y = $init_y;
 				$tab[$i] = "";
 				while (($y > -1 && $y < 19) && ($x > -1 && $x < 19))
-				// while ($x >= 0 && $y >= 0)
 				{
 					$id = $this->get_id($x, $y);
 					$tab[$i] .= $this->map[$id];
@@ -350,8 +283,6 @@ class IaPatern
 		$this->value_tab[5][2]['condition'] = 0; // 2 -> case j2
 		
 		$this->turn = 0;
-		/*$tmp = (array_count_values($this->tab));
-		$this->turn = round((19 * 19 - $tmp[0]) / 2);*/
 		$this->double_trois = $post['endbl3'];
 		$this->five_breakable = $post['endbl5'];
 		$this->score_j = $post['sca'];
@@ -398,7 +329,6 @@ class IaPatern
 		$tab[$j]['count'] = $count;
 		$tab[$j]['played'] = $is;
 		$tab[$j]['player'] = $player;
-
 		return ($tab);
 	}
 	
@@ -407,11 +337,9 @@ class IaPatern
 		$i = 0;
 		$max = count($tab);
 		$score = 0;
-
 		while ($i < $max)
 		{
 			$lens = ($tab[($i)]['count'] > 5 ? 5 : $tab[($i)]['count']);
-
 			if ($tab[($i)]['player'] != 0)
 			{
 				$player = $tab[($i)]['player'];
@@ -439,7 +367,6 @@ class IaPatern
 				{
 					$this->value_tab[($lens)][0]['free'] += 1;
 				}
-				
 			}
 			$i++;
 		}
@@ -550,7 +477,6 @@ class IaMachine
 		$y = rand (0, 18);
 		if ($this->map[$this->get_id($x, $y)] == 0)
 		{
-			$this->log[] = "Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
 			return ($x. ';' . $y);
 		}
 		else
@@ -620,28 +546,20 @@ class IaMachine
 						unset($res);
 						$res = array();
 					}
-				$arb = new Arbitre;
-				;
 				if ($maxs == $tmps)
 					$res[] = $i;
-				if ($tmps != 0 && ($this->five_breakable == 1 && $arb->check_5_h($tmp, $i, 2) == 0))
+				if ($tmps != 0)
 					$tab[$i] = $tmps;
 			}
 			$i++;
 		}
 
-		$this->log[] = print_r($tab, true);
-		echo "the_value_tab";
-		print_r($tab);
 		$final = $res;
 		$ends = count($final);
-		echo "tata max[$maxs]";
-		print_r($final);
 		$j = 0;
 		$this->user = 1;
 		$res = array();
 		$minu = 99999;
-		echo "SECONDE\n";
 		while ($j < $ends)
 		{
 			$tmp = $this->map;
@@ -683,8 +601,7 @@ class IaMachine
 					{
 						$maxu = $tmps;
 					}
-				$arb = new Arbitre;
-				if ($tmps != 0 && ($this->five_breakable == 1 && $arb->check_5_h($tmp, $i, 2) == 0))
+				if ($tmps != 0)
 					$tab[$i] = $tmps;
 				$i++;
 			}
@@ -693,7 +610,6 @@ class IaMachine
 				$minu = $maxu;
 			$j++;
 		}
-		echo "start epure\n";
 		$i = 0;
 		while ($i < $ends)
 		{
@@ -701,19 +617,14 @@ class IaMachine
 				unset($final[$i]);
 			$i++;
 		}
-		
 	
-		$this->log[] = print_r($final, true);
-		print_r($final);
 		if (count($final) >= 1)
 			$id = $final[rand(0, count($final) - 1)];
 		else
 			return ($this->make_rdm());
-		echo "ID:$id";
 		$tabs = $this->get_pos($id);
 		$x = $tabs['x'];
 		$y = $tabs['y'];
-		$this->log[] = "IA Pose en  $x;$y " . $this->map[$this->get_id($x, $y)];
 		return ($x. ';' . $y);
 	}
 
@@ -1064,38 +975,20 @@ function check_patterns ($tab, $id_player)
 }
 
 
-$ia = new IA;
+/* MAIN */ 
 
-/* Variables de définition pour savoir qui joue */
+$ia = new IA;
 $ia->colorIA = 2;
 $ia->colorPLAY2 = 2;
 $ia->empty = 0;
 $ia->setMap($_POST['query']);
-
-
-// echo $_POST['query'];
-
-
-/* Réponse */
-/*
-echo $ia->getresult();
-
-
-$ia->getLog();
-*/
-
-
 $result =  $ia->getresult();
-
-
-echo $ia->getLog();
 
 $tmp  = ob_get_clean();
 echo $result . "debug : " .  $tmp;
 $timeend=microtime(true);
 $time=$timeend-$timestart;
  
-//Afficher le temps d'éxecution
 $page_load_time = number_format($time, 3);
 echo "Script execute en " . $page_load_time . " sec";
 
