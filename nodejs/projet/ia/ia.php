@@ -349,7 +349,7 @@ class IaPatern
 		
 		
 		$tmp = (array_count_values($this->tab));
-		$this->turn = 19 * 19 - $tmp[0];
+		$this->turn = round((19 * 19 - $tmp[0]) / 2);
 		$this->double_trois = $post['endbl3'];
 		$this->five_breakable = $post['endbl5'];
 		$this->score_j = $post['sca'];
@@ -372,7 +372,7 @@ class IaPatern
 		$j = 0;
 		$player = ($token[$i] == 9 ? ($this->user == 0 ? 2 : 1) : $token[$i]);
 		$is = 0;
-		//echo "tokens -> $token \n";
+		echo "tokens -> $token \n";
 		//$this->log[] = "USE TOKEN";
 		while ($i < $max)
 		{
@@ -381,6 +381,7 @@ class IaPatern
 			
 			if ($player == $tmp)
 			{
+				echo "nbr token: " .$token[$i] . "\n";
 				$is = ($token[$i] == 9 ? 1 : $is);
 				$count++;
 			}
@@ -416,10 +417,14 @@ class IaPatern
 		$i = 0;
 		$max = count($tab);
 		$score = 0;
+		if ($this->turn >= 2)
+			print_r($tab);
 		while ($i < $max)
 		{
 			$lens = ($tab[($i)]['count'] > 5 ? 5 : $tab[($i)]['count']);
 			//$this->log[] = "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max";
+			if ($this->turn >= 3 && ($tab[$i]['played'] || (($i + 1) < $max && $tab[($i + 1)]['played']) || (($i) > 1 && $tab[($i - 1)]['played'])))
+				echo "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max turn: $this->turn jai joue" . $tab[$i]['played'] . "\n";
 			if ($tab[($i)]['player'] != 0)
 			{
 				$player = $tab[($i)]['player'];//($this->user == 1 ? $this->user : 2);
@@ -428,9 +433,17 @@ class IaPatern
 					//$this->log[] = "NEWS" . $player;
 					//$this->log[] = "$lens - $player " . (($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'lock' : 'condition') ." stop";
 					$this->value_tab[($lens)][($player)][(($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'condition' : 'free')] += 1;
-				}
-				if ($tab[($i)]['played'] == 1 && $i > 0 && $tab[($i - 1)]['count'] == 2)
+				}/*
+				if ($tab[($i)]['played'] == 1 && $i > 0)// && $tab[($i - 1)]['count'] == 2)
 					echo "YAHOOOOO " . $tab[($i)]['count'] ." i:$i max:$max\n";
+				if ($i > 1)
+					echo "---(-1)" . $tab[($i - 2)]['player'] . "//" . $tab[($i)]['player'] . " count:" . $tab[($i - 1)]['count'] . "\n";
+				if (($i + 2) < $max)
+					echo "---(+2)" . $tab[($i)]['player'] . "//" . $tab[($i + 2)]['player'] . " count:" . $tab[($i + 1)]['count'] . "\n";*/
+				if ($i > 1 && $tab[($i - 2)]['player'] == $tab[($i)]['player'] && 1 == $tab[($i)]['played'] && $tab[($i - 1)]['count'] == 2)
+					$score += 2;
+				if (($i + 2) < ($max) && $tab[($i)]['player'] == $tab[($i + 2)]['player'] && 1 == $tab[($i)]['played'] && $tab[($i + 1)]['count'] == 2)
+					$score += 2;
 				if ($i > 0 && ($i + 1) < $max)
 				{
 					//$this->log[] = "TATA" . $player;
@@ -476,9 +489,9 @@ class IaPatern
 	{
 		$value = 0;
 		//echo "Score : $this->score_j - $this->score_ia\r\n";
-		if ($this->score_j == 10)
+		if ($this->score_j >= 10)
 			$value -= $absolute_val;
-		if ($this->score_ia == 10)
+		if ($this->score_ia >= 10)
 			$value += $absolute_val;
 		$value += ($this->score_ia > $this->score_ia_init ? ((($this->score_ia * 0.1) + 1)  * $this->absolute_val) : 0);
 		$value -= ($this->score_j > $this->score_j_init ? ((($this->score_j * 0.1) + 1) * $this->absolute_val) : 0);
@@ -608,7 +621,7 @@ class IaMachine
 		//$this->log[] = "map tmp";
 		
 			$tmp = $this->map;
-			if ($tmp[$i] == 0)
+			if ($tmp[$i] == 0 && ($this->turn < 3 || ($this->turn >= 3 && $i > 18)))
 			{
 				$tmp = $this->map;
 				$tmp[$i] = 9; // 9 -> just pose
@@ -618,18 +631,20 @@ class IaMachine
 				$lines = new IaValueLine($tmp);
 				
 				$j = 0;
-				while ($j < 19)
-				{
-					$ia_pt->run_token($lines->concat_raw($j));
-					$j++;
-				}
-				$j = 0;
 
 				while ($j < 19)
 				{
 					$ia_pt->run_token($lines->concat_line($j));
 					$j++;
 				}
+				/*
+				$j = 0;
+				while ($j < 19)
+				{
+					$ia_pt->run_token($lines->concat_raw($j));
+					$j++;
+				}
+				
 				$tmp_tab = $lines->concat_diagonal_down_up();
 				foreach ($tmp_tab as $tabs)
 				{
@@ -639,7 +654,7 @@ class IaMachine
 				foreach ($tmp_tab as $tabs)
 				{
 					$ia_pt->run_token($tabs);
-				}
+				}*/
 				$tmps = intval($ia_pt->value_patterns());
 				if ($maxs < $tmps)
 					{
