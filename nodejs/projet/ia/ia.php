@@ -372,8 +372,6 @@ class IaPatern
 		$max = $i;
 		$i = 0;
 		$j = 0;
-		if (strstr($token, "2229") != false || strstr($token, "9222") != false)
-			echo "ALLALA$token ..\n";
 		$player = ($token[$i] == 9 ? ($this->user == 0 ? 2 : 1) : $token[$i]);
 		$is = 0;
 		// echo "tokens -> $token \n";
@@ -528,9 +526,7 @@ class IaPatern
 		$value += $this->value_tab[4][2]['condition'] * 40 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value -= $this->value_tab[5][1]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value += $this->value_tab[5][2]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2
-		//$value = ($value == 0 ? 1 : $value);
-		//$this->log[] = "TAB VALUE";
-		//$this->log[] = print_r($this->value_tab);
+
 		return ($value);
 	}
 	
