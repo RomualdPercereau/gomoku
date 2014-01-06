@@ -66,7 +66,7 @@ if (location.pathname == "/game")
 		          	demo = 0;
 		  			mode = "IVI";
 		  			update_players_data(0, 0);
-		  			iaPlay();
+		  			iaPlay(data['map']);
 		        },
 		        	"Demo": function()
 		        {
@@ -74,7 +74,7 @@ if (location.pathname == "/game")
 		          	demo = 1;
 		  			mode = "IVI";
 		  			update_players_data(0, 0);
-		  			iaPlay();
+		  			iaPlay(data['map']);
 		        },
 		        	"Demo 2": function()
 		        {
@@ -82,15 +82,15 @@ if (location.pathname == "/game")
 		          	demo = 2;
 		  			mode = "IVI";
 		  			update_players_data(0, 0);
-		  			iaPlay();
+		  			iaPlay(data['map']);
 		        },
 		        	"Demo 3 (script vs IA)": function()
 		        {
 		          	$( this ).dialog( "close" );
 		          	demo = 3;
-		  			mode = "PVI";
+		  			mode = "IVI";
 		  			update_players_data(0, 0);
-		  			iaPlay();
+		  			iaPlay(data['map']);
 		        },
 		        	"Replay": function()
 		        {
@@ -98,7 +98,7 @@ if (location.pathname == "/game")
 		          	demo = 42;
 		  			mode = "IVI";
 		  			update_players_data(0, 0);
-		  			iaPlay();
+		  			iaPlay(data['map']);
 		        },
 		        	"clear Replay": function()
 		        {
@@ -148,7 +148,8 @@ if (location.pathname == "/game")
 				if (mode != "PVP")
 					iaPlay(data['map'])
 				else
-					locked = 0;
+					locke
+					d = 0;
 			}
 		});
 	})
