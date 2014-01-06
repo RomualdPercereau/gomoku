@@ -431,23 +431,13 @@ class IaPatern
 			if ($tab[($i)]['player'] != 0)
 			{
 				$player = $tab[($i)]['player'];//($this->user == 1 ? $this->user : 2);
-				if ($i == 0 XOR ($i + 1) == $max)
+				if (($i + 2) < $max && $tab[($i)]['player'] == $tab[($i + 2)]['player'] && $tab[($i + 1)]['player'] == 0 && $tab[($i + 1)]['count'] == 1)
 				{
-					//$this->log[] = "NEWS" . $player;
-					//$this->log[] = "$lens - $player " . (($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'lock' : 'condition') ." stop";
-					;//$this->value_tab[($lens)][($player)][(($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'condition' : 'free')] += 1;
-				}/*
-				if ($tab[($i)]['played'] == 1 && $i > 0)// && $tab[($i - 1)]['count'] == 2)
-					echo "YAHOOOOO " . $tab[($i)]['count'] ." i:$i max:$max\n";
-				if ($i > 1)
-					echo "---(-1)" . $tab[($i - 2)]['player'] . "//" . $tab[($i)]['player'] . " count:" . $tab[($i - 1)]['count'] . "\n";
-				if (($i + 2) < $max)
-					echo "---(+2)" . $tab[($i)]['player'] . "//" . $tab[($i + 2)]['player'] . " count:" . $tab[($i + 1)]['count'] . "\n";*/
-				/*if ($i > 1 && $tab[($i - 2)]['player'] == $tab[($i)]['player'] && 1 == $tab[($i)]['played'] && $tab[($i - 1)]['count'] == 2)
-					$score += 2;
-				if (($i + 2) < ($max) && $tab[($i)]['player'] == $tab[($i + 2)]['player'] && 1 == $tab[($i)]['played'] && $tab[($i + 1)]['count'] == 2)
-					$score += 2;*/
-				if ($i > 0 && ($i + 1) < $max)
+					$lens += $tab[($i + 2)]['count'];
+					$lens = ($lens > 5 ? 5 : $lens);
+					$this->value_tab[($lens)][($player)]['lock'] += 1;
+				}
+				else if ($i > 0 && ($i + 1) < $max)
 				{
 					//$this->log[] = "TATA" . $player;
 					//if ($tab[($i - 1)]['played'] == 1 || $tab[($i + 1)]['played'] == 1)
@@ -466,7 +456,6 @@ class IaPatern
 				}
 				else if ($lens > 0)
 				{
-					//$this->log[] = "TITI";
 					$this->value_tab[($lens)][0]['free'] += 1;
 				}
 				
