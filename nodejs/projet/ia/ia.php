@@ -170,7 +170,7 @@ class IaValueLine
 	
 	private function get_id ($x, $y)
 	{
-		return (($x * 19 + $y < 18 * 18 ? $x * 19 + $y : 18* 18 ));
+		return (($x * 19 + $y < 19 * 19 ? $x * 19 + $y : 19 * 19 ));
 	}
 
 	private function get_pos($map, $i) {
@@ -191,8 +191,7 @@ class IaValueLine
 	public function concat_raw($i)
 	{
 		$x = 0;
-		$y = ($i >= 0 ? $i : 0);
-		$y = ($y < 19 ? $y : 18);
+		$y = $i;
 		$res = "";
 		while ($x < 19)
 		{
@@ -205,13 +204,13 @@ class IaValueLine
 	
 	public function concat_line($i)
 	{
-		$x = ($i >= 0 ? $i : 0);
-		$x = ($x < 19 ? $x : 18);
+		$x = $i;
 		$y = 0;
 		$res = "";
 		while ($y < 19)
 		{
 			$id = $this->get_id($x, $y);
+			//echo "$i [$x;$y]->$id" . $this->map[$id] . "\n";
 			$res .= $this->map[$id];
 			$y++;
 		}
@@ -371,6 +370,7 @@ class IaPatern
 		$j = 0;
 		$player = ($token[$i] == 9 ? ($this->user == 0 ? 2 : 1) : $token[$i]);
 		$is = 0;
+		//echo "tokens -> $token \n";
 		//$this->log[] = "USE TOKEN";
 		while ($i < $max)
 		{
@@ -399,7 +399,7 @@ class IaPatern
 		$tab[$j]['count'] = $count;
 		$tab[$j]['played'] = $is;
 		$tab[$j]['player'] = $player;
-		//echo "tokens -> $token \n";
+		
 		/*$this->log[] = "parse token";
 		$this->log[] = $token;
 		
@@ -604,10 +604,13 @@ class IaMachine
 			$tmp = $this->map;
 			if ($tmp[$i] == 0)
 			{
+				$tmp = $this->map;
 				$tmp[$i] = 9; // 9 -> just pose
 				//$this->log[] = print_r($tmp);
+				
 				$ia_pt = new IaPatern($tmp, $this->post, $i, $this->user);
 				$lines = new IaValueLine($tmp);
+				
 				$j = 0;
 				while ($j < 19)
 				{
@@ -631,18 +634,18 @@ class IaMachine
 				{
 					$ia_pt->run_token($tabs);
 				}
-				$tmp = intval($ia_pt->value_patterns());
-				if ($maxs < $tmp)
+				$tmps = intval($ia_pt->value_patterns());
+				if ($maxs < $tmps)
 					{
 						$maxs = $tmp;
 						unset($res);
 						$res = array();
 						//$res[] = $i;
 					}
-				if ($maxs == $tmp)
+				if ($maxs == $tmps)
 					$res[] = $i;
-				if ($tmp != 0)
-					$tab[$i] = $tmp;
+				if ($tmps != 0)
+					$tab[$i] = $tmps;
 				//$this->log[] = $ia_pt->get_log();
 			}
 			//else
