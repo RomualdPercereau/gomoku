@@ -4,15 +4,11 @@ Welcome to gomoku. The best online gomoku game.
 
 =======
 
-NOTES :
+In order to run it, please type :
+   node app.js
+If you want to play against an AI, you have to go on your local web directory ( cd /var/www if you use UNIX for exemple)
+and type :
+    ln /path/to/your/gomoku/directory/ia/ia.php .
+Then you can run the server and choose your game preferences.
 
-Reste à coder sur l'arbitre :
-
-- Le cas où l'on bloque la dernière "cassabilité" d'une ligne de 5 déjà construite, le jeu est sensé prendre fin.
-- La prise en compte de l'optionalité de certaines règles (règle de 3, 5 cassable)
-
-========
-
-LOGS :
-
-IMPORTANT : Bug de la prise aléatoire identifiée : Dans le cas où un placement n'est pas possible (double 3,...), le serveur le prend quand même en compte, et execute l'action qui en découle comme si le pion avait pu être posé.
+Have fun !
