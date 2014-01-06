@@ -593,7 +593,7 @@ class IaMachine
 		//if ($this->turn == 1)
 		//	return ($this->make_rdm());
 		//$used = (!$this->user ? - 1000000: 1000000);
-		$i = 324;
+		$i = 0;
 		$tab = Array();
 		$res = Array();
 		$maxs = 0;
@@ -607,7 +607,7 @@ class IaMachine
 			{
 				$tmp = $this->map;
 				$tmp[$i] = 9; // 9 -> just pose
-				print_r($tmp);
+				//print_r($tmp);
 				//$this->log[] = print_r($tmp);
 				
 				$ia_pt = new IaPatern($tmp, $this->post, $i, $this->user);
@@ -636,14 +636,12 @@ class IaMachine
 				{
 					$ia_pt->run_token($tabs);
 				}
-<<<<<<< HEAD
 				$tmps = intval($ia_pt->value_patterns());
 				if ($maxs < $tmps)
-=======
+
 				$tmp = intval($ia_pt->value_patterns());
 				echo "koink : $tmp;";
 				if ($maxs < $tmp)
->>>>>>> b8d6838180a90312c3aba46eadc4bac618d3f9b9
 					{
 						$maxs = $tmp;
 						unset($res);
@@ -690,7 +688,7 @@ class IaMachine
 		//$final = array_keys($tab, $good);
 		
 		$this->log[] = print_r($final, true);
-		
+		print_r($final);
 		$id = $final[rand(0, count($final) - 1)];
 		echo "ID:$id";
 		$tabs = $this->get_pos($id);
