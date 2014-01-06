@@ -235,7 +235,8 @@ class IaValueLine
 				$x = $init_x;
 				$y = $init_y;
 				$tab[$i] = "";
-				while (($y > -1 && $y < 19) && ($x > -1 && $x < 19))
+				// while (($y > -1 && $y < 19) && ($x > -1 && $x < 19))
+				while ($x < 19 && $y < 19)
 				{
 					$id = $this->get_id($x, $y);
 					$tab[$i] .= $this->map[$id];
@@ -256,11 +257,11 @@ class IaValueLine
 	*/
 	public function concat_diagonal_up_down()
 	{
-		$init_x = 18;
+		$init_x = 0;
 		$init_y = 4;
 		$i = 0;
 		$tab = Array();
-		while ($init_x > 4)
+		while ($init_x < 5)
 		{
 			while ($init_y < 19)
 			{
@@ -268,17 +269,18 @@ class IaValueLine
 				$y = $init_y;
 				$tab[$i] = "";
 				while (($y > -1 && $y < 19) && ($x > -1 && $x < 19))
+				// while ($x >= 0 && $y >= 0)
 				{
 					$id = $this->get_id($x, $y);
 					$tab[$i] .= $this->map[$id];
-					$x--;
+					$x++;
 					$y--;
 				}
 				$init_y++;
 				$i++;
 			}
 			$init_y = 18;
-			$init_x--;
+			$init_x++;
 		}
 		return ($tab);
 	}
@@ -372,7 +374,7 @@ class IaPatern
 		$j = 0;
 		$player = ($token[$i] == 9 ? ($this->user == 0 ? 2 : 1) : $token[$i]);
 		$is = 0;
-		echo "tokens -> $token \n";
+		// echo "tokens -> $token \n";
 		//$this->log[] = "USE TOKEN";
 		while ($i < $max)
 		{
@@ -381,7 +383,6 @@ class IaPatern
 			
 			if ($player == $tmp)
 			{
-				echo "nbr token: " .$token[$i] . "\n";
 				$is = ($token[$i] == 9 ? 1 : $is);
 				$count++;
 			}
@@ -389,12 +390,12 @@ class IaPatern
 			{
 				$tab[$j] = Array();
 				$tab[$j]['count'] = $count;
-				$tab[$j]['played'] = $is;
+				$tab[$j]['played'] = ($is);
 				$tab[$j]['player'] = $player;
 				$j++;
 				$player = $tmp;
 				$count = 1;
-				$is = 0;
+				$is = ($token[$i] == 9 ? 1 : 0);
 			//	$this->log[] = "Ennds" . $tmp . " -- count : " . $count . " - $i / $max";
 			}
 			$i++;
@@ -417,14 +418,14 @@ class IaPatern
 		$i = 0;
 		$max = count($tab);
 		$score = 0;
-		if ($this->turn >= 2)
-			print_r($tab);
+		// if ($this->turn >= 2)
+		// 	print_r($tab);
 		while ($i < $max)
 		{
 			$lens = ($tab[($i)]['count'] > 5 ? 5 : $tab[($i)]['count']);
 			//$this->log[] = "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max";
-			if ($this->turn >= 3 && ($tab[$i]['played'] || (($i + 1) < $max && $tab[($i + 1)]['played']) || (($i) > 1 && $tab[($i - 1)]['played'])))
-				echo "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max turn: $this->turn jai joue" . $tab[$i]['played'] . "\n";
+			// if ($this->turn >= 3 && ($tab[$i]['played'] || (($i + 1) < $max && $tab[($i + 1)]['played']) || (($i) > 1 && $tab[($i - 1)]['played'])))
+			// 	echo "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max turn: $this->turn jai joue" . $tab[$i]['played'] . "\n";
 			if ($tab[($i)]['player'] != 0)
 			{
 				$player = $tab[($i)]['player'];//($this->user == 1 ? $this->user : 2);
@@ -432,7 +433,7 @@ class IaPatern
 				{
 					//$this->log[] = "NEWS" . $player;
 					//$this->log[] = "$lens - $player " . (($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'lock' : 'condition') ." stop";
-					$this->value_tab[($lens)][($player)][(($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'condition' : 'free')] += 1;
+					;//$this->value_tab[($lens)][($player)][(($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'condition' : 'free')] += 1;
 				}/*
 				if ($tab[($i)]['played'] == 1 && $i > 0)// && $tab[($i - 1)]['count'] == 2)
 					echo "YAHOOOOO " . $tab[($i)]['count'] ." i:$i max:$max\n";
@@ -485,9 +486,11 @@ class IaPatern
 		$this->value_parse_line($this->parse_line($token));
 	}
 
-	public function value_patterns()
+	public function value_patterns($i)
 	{
 		$value = 0;
+		if (($i == 0))
+			print_r($this->value_tab);
 		//echo "Score : $this->score_j - $this->score_ia\r\n";
 		if ($this->score_j >= 10)
 			$value -= $absolute_val;
@@ -508,8 +511,8 @@ class IaPatern
 		$value -= $this->value_tab[5][2]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2*/
 		
 		//$this->value_tab[1][0]['free'] * 0 * ($this->score_ia / 10); // 0 -> case vide
-		$value += $this->value_tab[1][1]['free'] * 5 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[1][2]['free'] * 5 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value += $this->value_tab[1][1]['free'] * 1 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
+		$value -= $this->value_tab[1][2]['free'] * 1 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$this->value_tab[2][0]['free'] * 10 * ($this->score_ia / 10); // 0 -> case vide
 		$value += $this->value_tab[2][1]['free'] * 10 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[2][2]['free'] * 10 * (($this->score_j * 0.1) + 1); // 2 -> case j2
@@ -524,7 +527,7 @@ class IaPatern
 		$value -= $this->value_tab[5][2]['free'] * ($this->five_breakable == 1 ? 3000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		
 
-		$value += $this->value_tab[1][1]['condition'] * 5 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
+		$value += $this->value_tab[1][1]['condition'] * 8 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[1][2]['condition'] * 4 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[2][1]['condition'] * 30 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[2][2]['condition'] * 28 * (($this->score_j * 0.1) + 1); // 2 -> case j2
@@ -621,7 +624,7 @@ class IaMachine
 		//$this->log[] = "map tmp";
 		
 			$tmp = $this->map;
-			if ($tmp[$i] == 0 && ($this->turn < 3 || ($this->turn >= 3 && $i > 18)))
+			if ($tmp[$i] == 0)
 			{
 				$tmp = $this->map;
 				$tmp[$i] = 9; // 9 -> just pose
@@ -637,7 +640,6 @@ class IaMachine
 					$ia_pt->run_token($lines->concat_line($j));
 					$j++;
 				}
-				/*
 				$j = 0;
 				while ($j < 19)
 				{
@@ -654,8 +656,8 @@ class IaMachine
 				foreach ($tmp_tab as $tabs)
 				{
 					$ia_pt->run_token($tabs);
-				}*/
-				$tmps = intval($ia_pt->value_patterns());
+				}
+				$tmps = intval($ia_pt->value_patterns($i));
 				if ($maxs < $tmps)
 					{
 						$maxs = $tmps;
