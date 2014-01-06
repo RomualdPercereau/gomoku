@@ -372,6 +372,8 @@ class IaPatern
 		$max = $i;
 		$i = 0;
 		$j = 0;
+		if (strstr($token, "2229") != false || strstr($token, "9222") != false)
+			echo "ALLALA$token ..\n";
 		$player = ($token[$i] == 9 ? ($this->user == 0 ? 2 : 1) : $token[$i]);
 		$is = 0;
 		// echo "tokens -> $token \n";
@@ -424,8 +426,8 @@ class IaPatern
 		{
 			$lens = ($tab[($i)]['count'] > 5 ? 5 : $tab[($i)]['count']);
 			//$this->log[] = "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max";
-			// if ($this->turn >= 3 && ($tab[$i]['played'] || (($i + 1) < $max && $tab[($i + 1)]['played']) || (($i) > 1 && $tab[($i - 1)]['played'])))
-			// 	echo "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max turn: $this->turn jai joue" . $tab[$i]['played'] . "\n";
+			 if ($lens > 2 && $tab[$i]['player'] == 2)
+			 	echo "--LENS $lens  tab : " . $tab[$i]['player'] . " i $i  / max: $max turn: $this->turn jai joue" . $tab[$i]['played'] . "\n";
 			if ($tab[($i)]['player'] != 0)
 			{
 				$player = $tab[($i)]['player'];//($this->user == 1 ? $this->user : 2);
@@ -518,13 +520,15 @@ class IaPatern
 		$value -= $this->value_tab[2][2]['free'] * 10 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$this->value_tab[3][0]['free'] = 0; // 0 -> case vide
 		$value += $this->value_tab[3][1]['free'] * 20 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['free'] * 20 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[3][2]['free'] * 2 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$this->value_tab[4][0]['free'] = 0; // 0 -> case vide
-		$value += $this->value_tab[4][1]['free'] * 50 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[4][2]['free'] * 50 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[4][1]['free'] * 3 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
+		if ($this->value_tab[4][2]['free'] > 0)
+			echo "YOUUUUU$i\n";
+		$value += $this->value_tab[4][2]['free'] * 100 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$this->value_tab[5][0]['free'] = 0; // 0 -> case vide
 		$value += $this->value_tab[5][1]['free'] * ($this->five_breakable == 1 ? 3000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[5][2]['free'] * ($this->five_breakable == 1 ? 3000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		//$value -= $this->value_tab[5][2]['free'] * ($this->five_breakable == 1 ? 3000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		
 
 		$value += $this->value_tab[1][1]['condition'] * 8 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
@@ -532,11 +536,11 @@ class IaPatern
 		$value += $this->value_tab[2][1]['condition'] * 30 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[2][2]['condition'] * 28 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[3][1]['condition'] * 20 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['condition'] * 18 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		//$value -= $this->value_tab[3][2]['condition'] * 1 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[4][1]['condition'] * 40 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[4][2]['condition'] * 38 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[4][2]['condition'] * 5 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[5][1]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[5][2]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		//$value -= $this->value_tab[5][2]['condition'] * ($this->five_breakable == 1 ? 2000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$value = ($value == 0 ? 1 : $value);
 		//$this->log[] = "TAB VALUE";
 		//$this->log[] = print_r($this->value_tab);
