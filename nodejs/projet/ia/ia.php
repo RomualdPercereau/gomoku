@@ -84,7 +84,6 @@ class IA
 		$val = $iamachine->run_machine();
 		
 		$this->log[] = $val;
-		$this->log[] = "->IA a joué !!!!!!!";
 		$this->log[] = print_r($iamachine->get_log(), true);
 		return ($val);
 	}
