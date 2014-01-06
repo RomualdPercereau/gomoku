@@ -441,10 +441,10 @@ class IaPatern
 					echo "---(-1)" . $tab[($i - 2)]['player'] . "//" . $tab[($i)]['player'] . " count:" . $tab[($i - 1)]['count'] . "\n";
 				if (($i + 2) < $max)
 					echo "---(+2)" . $tab[($i)]['player'] . "//" . $tab[($i + 2)]['player'] . " count:" . $tab[($i + 1)]['count'] . "\n";*/
-				if ($i > 1 && $tab[($i - 2)]['player'] == $tab[($i)]['player'] && 1 == $tab[($i)]['played'] && $tab[($i - 1)]['count'] == 2)
+				/*if ($i > 1 && $tab[($i - 2)]['player'] == $tab[($i)]['player'] && 1 == $tab[($i)]['played'] && $tab[($i - 1)]['count'] == 2)
 					$score += 2;
 				if (($i + 2) < ($max) && $tab[($i)]['player'] == $tab[($i + 2)]['player'] && 1 == $tab[($i)]['played'] && $tab[($i + 1)]['count'] == 2)
-					$score += 2;
+					$score += 2;*/
 				if ($i > 0 && ($i + 1) < $max)
 				{
 					//$this->log[] = "TATA" . $player;
@@ -489,12 +489,7 @@ class IaPatern
 	public function value_patterns($i)
 	{
 		$value = 0;
-		echo "issss $i\n";
-		if (($i == 0 || $i == 18))
-		{
-			echo "tabsvale";
-			print_r($this->value_tab);
-		}
+		
 		//echo "Score : $this->score_j - $this->score_ia\r\n";
 		if ($this->score_j >= 10)
 			$value -= $absolute_val;
@@ -513,17 +508,11 @@ class IaPatern
 		//$value -= $this->value_tab[4][2]['lock'] = 0; // 2 -> case j2
 		$value += $this->value_tab[5][1]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[5][2]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2*/
-		if (($i == 0 || $i == 18))
-				{
-					echo "2coefs:" . ($this->value_tab[1][2]['free'] * 4 * (($this->score_j * 0.1) + 1)) . "vals-$value\n";
-				}
+		
 		//$this->value_tab[1][0]['free'] * 0 * ($this->score_ia / 10); // 0 -> case vide
 		$value -= $this->value_tab[1][1]['free'] * 1 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value += $this->value_tab[1][2]['free'] * 4 * (($this->score_j * 0.1) + 1); // 2 -> case j2
-				if (($i == 0 || $i == 18))
-				{
-					echo "coefs:" . ($this->value_tab[1][2]['free'] * 4 * (($this->score_j * 0.1) + 1)) . "vals-$value\n";
-				}
+		$value += $this->value_tab[1][2]['free'] * 2 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+				
 		//$this->value_tab[2][0]['free'] * 10 * ($this->score_ia / 10); // 0 -> case vide
 		$value += $this->value_tab[2][1]['free'] * 10 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[2][2]['free'] * 10 * (($this->score_j * 0.1) + 1); // 2 -> case j2
