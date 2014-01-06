@@ -597,7 +597,7 @@ class IaMachine
 		$tab = Array();
 		$res = Array();
 		$maxs = 0;
-		echo "lens map " . count($this->map);
+		
 		while ($i < (19*19))
 		{
 		//$this->log[] = "map tmp";
@@ -607,7 +607,6 @@ class IaMachine
 			{
 				$tmp = $this->map;
 				$tmp[$i] = 9; // 9 -> just pose
-				//print_r($tmp);
 				//$this->log[] = print_r($tmp);
 				
 				$ia_pt = new IaPatern($tmp, $this->post, $i, $this->user);
@@ -638,12 +637,8 @@ class IaMachine
 				}
 				$tmps = intval($ia_pt->value_patterns());
 				if ($maxs < $tmps)
-
-				$tmp = intval($ia_pt->value_patterns());
-				echo "koink : $tmp;";
-				if ($maxs < $tmp)
 					{
-						$maxs = $tmp;
+						$maxs = $tmps;
 						unset($res);
 						$res = array();
 						//$res[] = $i;
@@ -700,7 +695,7 @@ class IaMachine
 
 	private function get_id ($x, $y)
 	{
-		return (($x * 19 + $y < 18 * 18 ? $x * 19 + $y : 18 * 18 ));
+		return (($x * 19 + $y < 19 * 19 ? $x * 19 + $y : 19 * 19 ));
 	}
 	
 	public function get_log()
