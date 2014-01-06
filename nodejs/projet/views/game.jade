@@ -13,7 +13,8 @@ div(class="jumbotron")
             li
                   ul(class="line")
                     -   for (var k = 0; k < 19; k++){
-                        li(id="id-" + counter++)
+                        li(id="id-" + counter++) 
+                          span(class="number") #{counter}
                     -      }
     -      }
 div(id="dialog-confirm")

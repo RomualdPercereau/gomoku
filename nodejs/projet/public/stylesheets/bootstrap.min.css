@@ -166,3 +166,16 @@
 		margin-left: 4px;
 		padding: 6px; 
 	}
+
+	.number {
+		position: absolute;
+		color: grey;
+		font-size: 10px;
+		margin-top: 28px;
+
+	}
+
+	.tabl   
+	{
+		position: relative;
+	}
