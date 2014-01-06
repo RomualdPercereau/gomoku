@@ -593,11 +593,11 @@ class IaMachine
 		//if ($this->turn == 1)
 		//	return ($this->make_rdm());
 		//$used = (!$this->user ? - 1000000: 1000000);
-		$i = 324;
+		$i = 0;
 		$tab = Array();
 		$res = Array();
 		$maxs = 0;
-		echo "lens map " . count($this->map);
+		
 		while ($i < (19*19))
 		{
 		//$this->log[] = "map tmp";
@@ -607,7 +607,7 @@ class IaMachine
 			{
 				$tmp = $this->map;
 				$tmp[$i] = 9; // 9 -> just pose
-				print_r($tmp);
+				// print_r($tmp);
 				//$this->log[] = print_r($tmp);
 				
 				$ia_pt = new IaPatern($tmp, $this->post, $i, $this->user);
@@ -636,16 +636,12 @@ class IaMachine
 				{
 					$ia_pt->run_token($tabs);
 				}
-<<<<<<< HEAD
 				$tmps = intval($ia_pt->value_patterns());
 				if ($maxs < $tmps)
-=======
-				$tmp = intval($ia_pt->value_patterns());
-				echo "koink : $tmp;";
-				if ($maxs < $tmp)
->>>>>>> b8d6838180a90312c3aba46eadc4bac618d3f9b9
+				$tmps = intval($ia_pt->value_patterns());
+ 				if ($maxs < $tmp)
 					{
-						$maxs = $tmp;
+						$maxs = $tmps;
 						unset($res);
 						$res = array();
 						//$res[] = $i;
@@ -702,7 +698,7 @@ class IaMachine
 
 	private function get_id ($x, $y)
 	{
-		return (($x * 19 + $y < 18 * 18 ? $x * 19 + $y : 18 * 18 ));
+		return (($x * 19 + $y < 19 * 19 ? $x * 19 + $y : 19 * 19 ));
 	}
 	
 	public function get_log()
