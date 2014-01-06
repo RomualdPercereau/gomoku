@@ -190,6 +190,7 @@ class IaValueLine
 	
 	public function concat_raw($i)
 	{
+
 		$x = 0;
 		$y = ($i >= 0 ? $i : 0);
 		$y = ($y < 19 ? $y : 18);
@@ -399,7 +400,7 @@ class IaPatern
 		$tab[$j]['count'] = $count;
 		$tab[$j]['played'] = $is;
 		$tab[$j]['player'] = $player;
-		//echo "tokens -> $token \n";
+		echo "tokens -> $token \n";
 		/*$this->log[] = "parse token";
 		$this->log[] = $token;
 		
@@ -592,7 +593,7 @@ class IaMachine
 		//if ($this->turn == 1)
 		//	return ($this->make_rdm());
 		//$used = (!$this->user ? - 1000000: 1000000);
-		$i = 0;
+		$i = 324;
 		$tab = Array();
 		$res = Array();
 		$maxs = 0;
@@ -605,6 +606,7 @@ class IaMachine
 			if ($tmp[$i] == 0)
 			{
 				$tmp[$i] = 9; // 9 -> just pose
+				print_r($tmp);
 				//$this->log[] = print_r($tmp);
 				$ia_pt = new IaPatern($tmp, $this->post, $i, $this->user);
 				$lines = new IaValueLine($tmp);
@@ -632,6 +634,7 @@ class IaMachine
 					$ia_pt->run_token($tabs);
 				}
 				$tmp = intval($ia_pt->value_patterns());
+				echo "koink : $tmp;";
 				if ($maxs < $tmp)
 					{
 						$maxs = $tmp;
