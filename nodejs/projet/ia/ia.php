@@ -429,10 +429,13 @@ class IaPatern
 					//$this->log[] = "$lens - $player " . (($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'lock' : 'condition') ." stop";
 					$this->value_tab[($lens)][($player)][(($i == 0 && $tab[($i + 1)]['player'] == $tab[($i)]['player']) || ((($i + 1) == $max && $tab[($i - 1)]['player'] == $tab[($i)]['player']))  ? 'condition' : 'free')] += 1;
 				}
+				if ($tab[($i)]['played'] == 1 && $i > 0 && $tab[($i - 1)]['count'] == 2)
+					echo "YAHOOOOO " . $tab[($i)]['count'] ." i:$i max:$max\n";
 				if ($i > 0 && ($i + 1) < $max)
 				{
 					//$this->log[] = "TATA" . $player;
-					//echo "-1 " . $tab[($i + 1)]['player'] . " et +1 " . $tab[($i - 1)]['player'] . "\n\r";
+					if ($tab[($i - 1)]['played'] == 1 || $tab[($i + 1)]['played'] == 1)
+						echo "-1 " . $tab[($i + 1)]['player'] . " et +1 " . $tab[($i - 1)]['player'] . " count " .$tab[($i)]['count'] . "joue -1" . $tab[($i - 1)]['played'] . "joue +1" . $tab[($i + 1)]['played'] ."\n\r";
 					if ($tab[($i - 1)]['played'] == 1 && $tab[($i + 1)]['player'] == $tab[($i - 1)]['player'] && $tab[($i)]['count'] == 2)
 						$score += 2;
 					if ($tab[($i + 1)]['played'] == 1 && $tab[($i - 1)]['player'] == $tab[($i + 1)]['player'] && $tab[($i)]['count'] == 2)
@@ -454,6 +457,7 @@ class IaPatern
 			}
 			$i++;
 		}
+		//echo "score -> $score\n";
 		if ($this->user)
 			$this->score_j += $score;
 		else
@@ -476,8 +480,8 @@ class IaPatern
 			$value -= $absolute_val;
 		if ($this->score_ia == 10)
 			$value += $absolute_val;
-		$value += ($this->score_ia > $this->score_ia_init ? ((($this->score_ia * 0.1) + 1)  * $absolute_val) : 0);
-		$value -= ($this->score_j > $this->score_j_init ? ((($this->score_j * 0.1) + 1) * $absolute_val) : 0);
+		$value += ($this->score_ia > $this->score_ia_init ? ((($this->score_ia * 0.1) + 1)  * $this->absolute_val) : 0);
+		$value -= ($this->score_j > $this->score_j_init ? ((($this->score_j * 0.1) + 1) * $this->absolute_val) : 0);
 		
 		$value -= $this->value_tab[1][1]['lock'] * 5 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value += $this->value_tab[1][2]['lock'] * 3 * (($this->score_j * 0.1) + 1); // 2 -> case j2
