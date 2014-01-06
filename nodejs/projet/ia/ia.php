@@ -10,6 +10,7 @@ ln /Users/romuald/ ... /gomoku/nodejs/projet/ia/ia.php .
 **
 */ 
 
+$timestart = microtime(true);
 error_reporting(E_ALL); // remplacer E_ALL par 0 pour le rendu
 ini_set('error_reporting', E_ALL); // pour windows au cas où 
 
@@ -1071,6 +1072,13 @@ echo $ia->getLog();
 
 $tmp  = ob_get_clean();
 echo $result . "debug : " .  $tmp;
+$timeend=microtime(true);
+$time=$timeend-$timestart;
+ 
+//Afficher le temps d'éxecution
+$page_load_time = number_format($time, 3);
+echo "Script execute en " . $page_load_time . " sec";
+
 
 
 ?>
