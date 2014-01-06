@@ -504,10 +504,10 @@ class IaPatern
 		$value += $this->value_tab[1][2]['lock'] * 3 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[2][1]['lock'] * 10 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[2][2]['lock'] * 8 * (($this->score_j * 0.1) + 1); // 2 -> case j2
-		$value += $this->value_tab[3][1]['lock'] * 20 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value -= $this->value_tab[3][2]['lock'] * 18 * (($this->score_j * 0.1) + 1); // 2 -> case j2
-		//$value += $this->value_tab[4][1]['lock'] = 0; // 1 -> case j1
-		//$value -= $this->value_tab[4][2]['lock'] = 0; // 2 -> case j2
+		$value -= $this->value_tab[3][1]['lock'] * 20 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
+		$value += $this->value_tab[3][2]['lock'] * 18 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value -= $this->value_tab[4][1]['lock'] * 40 * (($this->score_ia * 0.1) + 1); // 2 -> case j2
+		$value += $this->value_tab[4][2]['lock'] * 50 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		$value += $this->value_tab[5][1]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[5][2]['lock'] * ($this->five_breakable == 1 ? 1000 : $this->absolute_val) * (($this->score_j * 0.1) + 1); // 2 -> case j2*/
 		
@@ -516,15 +516,13 @@ class IaPatern
 		$value += $this->value_tab[1][2]['free'] * 2 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 				
 		//$this->value_tab[2][0]['free'] * 10 * ($this->score_ia / 10); // 0 -> case vide
-		$value += $this->value_tab[2][1]['free'] * 10 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
+		$value += $this->value_tab[2][1]['free'] * 11 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value -= $this->value_tab[2][2]['free'] * 10 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$this->value_tab[3][0]['free'] = 0; // 0 -> case vide
 		$value -= $this->value_tab[3][1]['free'] * 20 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		$value += $this->value_tab[3][2]['free'] * 2 * (($this->score_j * 0.1) + 1); // 2 -> case j2
+		$value += $this->value_tab[3][2]['free'] * 10 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$this->value_tab[4][0]['free'] = 0; // 0 -> case vide
-		$value -= $this->value_tab[4][1]['free'] * 3 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
-		if ($this->value_tab[4][2]['free'] > 0)
-			echo "YOUUUUU$i\n";
+		$value -= $this->value_tab[4][1]['free'] * 40 * (($this->score_ia * 0.1) + 1); // 1 -> case j1
 		$value += $this->value_tab[4][2]['free'] * 100 * (($this->score_j * 0.1) + 1); // 2 -> case j2
 		//$this->value_tab[5][0]['free'] = 0; // 0 -> case vide
 		$value -= $this->value_tab[5][1]['free'] * ($this->five_breakable == 1 ? 3000 : $this->absolute_val) * (($this->score_ia * 0.1) + 1); // 1 -> case j1
@@ -669,9 +667,11 @@ class IaMachine
 						$res = array();
 						//$res[] = $i;
 					}
+				$arb = new Arbitre;
+				;
 				if ($maxs == $tmps)
 					$res[] = $i;
-				if ($tmps != 0)
+				if ($tmps != 0 && ($this->five_breakable == 1 && $arb->check_5_h($tmp, $i, 2) == 0))
 					$tab[$i] = $tmps;
 				//$this->log[] = $ia_pt->get_log();
 			}
