@@ -4,7 +4,6 @@ require('./rules.js');
 exports.main_game = function(req, endbl5, endbl3) {
 
 
-	console.log(endbl5 + " " + endbl3)
 
 	var new_user = true;
 	var move_ok = false;

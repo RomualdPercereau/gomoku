@@ -193,7 +193,6 @@ if (location.pathname == "/game")
 	{
 
 		locked = 1;
-		console.log("c'est à l'ia ! ");
 		$("body").css("cursor", "progress");
 		$.ajax({
 		  url: "/ia.php",
@@ -206,9 +205,7 @@ if (location.pathname == "/game")
 		}).done(function(ia_data)
 		{
 
-			console.log(ia_data)
 			tabl = ia_data.split(";");
-			console.log(get_id(tabl[0], tabl[1]));
 			$.getJSON("arbitre/" + (parseInt(id_player) + 1)  + "/" + get_id(tabl[0], tabl[1]), function(data)
 			{
 				$("body").css("cursor", "default");

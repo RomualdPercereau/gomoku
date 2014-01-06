@@ -289,11 +289,9 @@ can_be_take = function (map, i, id_player)
 
 
 	if (check_pattern(tab, "XXEOOVX", id_player)) {
-		console.log("EOOVXXX")
 		return (true);
 	}
 	if (check_pattern(tab, "XVOOEXX", id_player)) {
-		console.log("XXXVOOE")
 		return (true);
 	}
 
@@ -306,11 +304,9 @@ can_be_take = function (map, i, id_player)
 	tab[3] = new point(pos['x'], pos['y'], id_player);
 
 	if (check_pattern(tab, "XXEOOVX", id_player)) {
-		console.log("EOOVXXX")
 		return (true);
 	}
 	if (check_pattern(tab, "XVOOEXX", id_player)) {
-		console.log("XXXVOOE")
 		return (true);
 	}
 

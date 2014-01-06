@@ -7,7 +7,6 @@ var endbl3 = 0;
 
 
 getpos = function(i) {
-console.log(i);
   var y;
   var x;
 
@@ -59,7 +58,6 @@ exports.rmsession = function (req, res)
 exports.endbl3 = function (req, res)
 {
   endbl3 = req.params["val"];
-  console.log("endbl3" + endbl3);
   res.status(200);
   res.send("");
 
@@ -69,7 +67,6 @@ exports.endbl5 = function (req, res)
 {
   endbl5 = req.params["val"];
 
-  console.log("endbl5" + endbl5);
   res.status(200);
   res.send("");
 
@@ -118,7 +115,7 @@ if (req.body['demo'] > 0 && !(lines != undefined  &&  lines.length == 0))
       if (err) console.log(err);
       // console.log(data);
       lines = data.split(/\r?\n/);
-      console.log(lines);
+
       ret = lines.shift();
       fs.appendFile('demo42.txt', ret + "\n", function (err) {
       res.status(200);
@@ -141,7 +138,6 @@ if (req.body['demo'] > 0 && !(lines != undefined  &&  lines.length == 0))
 else
 {
 
-  console.log(req.session)
     var request = require('request');
     request.post(
   {

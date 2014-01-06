@@ -1,1 +1,6 @@
-Simple Website create with NodeJs, Express and Jade.
+Gomoku project
+
+habert_a
+jadeau_q
+percer_r
+coutur_n
