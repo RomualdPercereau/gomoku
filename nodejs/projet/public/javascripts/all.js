@@ -3,6 +3,9 @@ var endbl5 = 0;
 var endbl3 = 0;
 var scorea = 0;
 var scoreb = 0;
+	
+
+
 
 get_id = function(x, y) {
 	var ret = parseInt(x) * 19 + parseInt(y);
@@ -11,6 +14,7 @@ get_id = function(x, y) {
 
 
 $(function() {
+$('body').disableSelection(); 
 
 
 $("#breakcheck").click(function(){
